@@ -1,0 +1,141 @@
+# TEMPORARY DIAGNOSTIC -- delete this file once the cause is fixed.
+#
+# `cargo test -p fluxsmith-app --lib` dies on windows-latest with exit code
+# 0xc0000139 (STATUS_ENTRYPOINT_NOT_FOUND) before a single test runs: the binary
+# links, but the loader finds a DLL that lacks an export it imports. The crate
+# depends on `tauri`, so the test executable carries WebView2 imports even though
+# all 120 lib tests are pure logic. This run answers three things in one trip:
+# which (DLL, symbol) pair is missing, which copies of the DLL the runner has and
+# what they export, and whether placing the right copy beside the executable is
+# enough to make it run.
+name: diag-windows
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diag:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo --version
+      - uses: pnpm/action-setup@v4
+        with: { version: 11 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build the test executable without running it
+        id: build
+        shell: pwsh
+        run: |
+          $lines = cargo test -p fluxsmith-app --lib --no-run --message-format=json
+          $exe = $lines |
+            ForEach-Object { try { $_ | ConvertFrom-Json } catch { $null } } |
+            Where-Object { $_.reason -eq 'compiler-artifact' -and $_.executable -and $_.target.name -eq 'fluxsmith_app' } |
+            Select-Object -Last 1 -ExpandProperty executable
+          Write-Host "TEST EXE: $exe"
+          "exe=$exe" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Reproduce the failure and report the exit code
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $exe = "${{ steps.build.outputs.exe }}"
+          & $exe --list 2>&1 | Out-String | Write-Host
+          $code = $LASTEXITCODE
+          Write-Host ("EXIT: {0} (0x{1:x8})" -f $code, $code)
+
+      - name: Locate dumpbin
+        id: dumpbin
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vs = & $vswhere -latest -property installationPath
+          Write-Host "VS: $vs"
+          $db = Get-ChildItem -Path "$vs\VC\Tools\MSVC" -Recurse -Filter dumpbin.exe -ErrorAction SilentlyContinue |
+                Where-Object { $_.FullName -match 'Hostx64\\x64' } |
+                Select-Object -First 1
+          Write-Host "DUMPBIN: $($db.FullName)"
+          "path=$($db.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: What the executable imports
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $db = "${{ steps.dumpbin.outputs.path }}"
+          $exe = "${{ steps.build.outputs.exe }}"
+          Write-Host "===== /dependents ====="
+          & $db /nologo /dependents $exe | Out-String | Write-Host
+          Write-Host "===== /imports, WebView2 and Edge only ====="
+          $imports = & $db /nologo /imports $exe | Out-String
+          $imports -split "`r?`n" |
+            Select-String -Pattern 'WebView2|Edge|\.dll' -Context 0,40 |
+            Out-String | Write-Host
+
+      - name: Every WebView2Loader.dll the loader could reach
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $exe = "${{ steps.build.outputs.exe }}"
+          $roots = @(
+            (Split-Path $exe),
+            (Join-Path (Split-Path (Split-Path $exe)) ''),
+            "$env:USERPROFILE\.cargo\registry\src",
+            "${env:ProgramFiles(x86)}\Microsoft\EdgeWebView\Application",
+            "$env:ProgramFiles\Microsoft\EdgeWebView\Application"
+          ) + ($env:PATH -split ';')
+          $seen = @{}
+          foreach ($r in ($roots | Where-Object { $_ -and (Test-Path $_) })) {
+            Get-ChildItem -Path $r -Recurse -Filter WebView2Loader.dll -ErrorAction SilentlyContinue |
+              ForEach-Object {
+                if (-not $seen.ContainsKey($_.FullName)) {
+                  $seen[$_.FullName] = $true
+                  $v = $_.VersionInfo.FileVersion
+                  Write-Host ("{0,-16} {1,12}  {2}" -f $v, $_.Length, $_.FullName)
+                }
+              }
+          }
+          if ($seen.Count -eq 0) { Write-Host "NO WebView2Loader.dll FOUND ANYWHERE ON THE SEARCH PATH" }
+          "count=$($seen.Count)" | Write-Host
+
+      - name: What each copy exports
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $db = "${{ steps.dumpbin.outputs.path }}"
+          $exe = "${{ steps.build.outputs.exe }}"
+          $roots = @("$env:USERPROFILE\.cargo\registry\src",
+                     "${env:ProgramFiles(x86)}\Microsoft\EdgeWebView\Application",
+                     (Split-Path $exe)) + ($env:PATH -split ';')
+          $dlls = foreach ($r in ($roots | Where-Object { $_ -and (Test-Path $_) })) {
+            Get-ChildItem -Path $r -Recurse -Filter WebView2Loader.dll -ErrorAction SilentlyContinue
+          }
+          foreach ($d in ($dlls | Sort-Object FullName -Unique)) {
+            Write-Host "===== $($d.FullName) ====="
+            & $db /nologo /exports $d.FullName | Select-String -Pattern '^\s+\d+\s' | Out-String | Write-Host
+          }
+
+      - name: Hypothesis B - put the registry copy beside the executable and retry
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $exe = "${{ steps.build.outputs.exe }}"
+          $dir = Split-Path $exe
+          $src = Get-ChildItem -Path "$env:USERPROFILE\.cargo\registry\src" -Recurse -Filter WebView2Loader.dll -ErrorAction SilentlyContinue |
+                 Select-Object -First 1
+          if (-not $src) {
+            Write-Host "no WebView2Loader.dll in the cargo registry: hypothesis B not testable"
+            exit 0
+          }
+          Write-Host "copying $($src.FullName) -> $dir"
+          Copy-Item $src.FullName -Destination $dir -Force
+          & $exe --list 2>&1 | Select-Object -First 5 | Out-String | Write-Host
+          $code = $LASTEXITCODE
+          Write-Host ("EXIT AFTER COPY: {0} (0x{1:x8})" -f $code, $code)
+          if ($code -eq 0) { Write-Host "HYPOTHESIS B CONFIRMED: the adjacent DLL fixes it" }
+          else { Write-Host "HYPOTHESIS B REJECTED: still failing" }
