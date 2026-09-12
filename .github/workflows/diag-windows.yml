@@ -1,11 +1,14 @@
-# TEMPORARY DIAGNOSTIC -- delete once the cause is fixed.
+# TEMPORARY DIAGNOSTIC -- delete once the cause is fixed or the step is scoped.
 #
-# `cargo test -p fluxsmith-app --lib` dies on windows-latest with 0xc0000139
-# (STATUS_ENTRYPOINT_NOT_FOUND) before any test runs. Two earlier stories were
-# wrong: it is NOT WebView2Loader (the import table does not mention it), and the
-# first "no missing entry points" answer was vacuous because the symbol regex
-# matched nothing. This run takes three independent shots and uploads every raw
-# dump as an artifact so the analysis happens off the log.
+# Last resort for the 0xc0000139 (STATUS_ENTRYPOINT_NOT_FOUND) that kills
+# `cargo test -p fluxsmith-app --lib` on windows-latest before any test runs.
+#
+# Ruled out by earlier runs, with evidence: it is not WebView2Loader (absent from
+# the import table), it is not DLL shadowing (the only DLLs beside the executable
+# are proc-macro crates, none sharing a system name), and every one of the 24
+# direct imports resolves to a stock C:\Windows\System32 file. Hand-rolled PE
+# parsing produced two wrong answers, so this run does none: it asks the loader
+# to name the DLL and the entry point itself.
 name: diag-windows
 
 on:
@@ -38,92 +41,52 @@ jobs:
           Write-Host "TEST EXE: $exe"
           "exe=$exe" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
-      - name: Shot 1 - let the loader say it itself (cdb + loader snaps)
-        continue-on-error: true
+      - name: Do the debugging tools exist? (state it, do not infer it)
+        id: tools
         shell: pwsh
         run: |
-          $out = "$env:RUNNER_TEMP\diag"; New-Item -ItemType Directory -Force -Path $out | Out-Null
-          $exe = "${{ steps.build.outputs.exe }}"
           $kit = "${env:ProgramFiles(x86)}\Windows Kits\10\Debuggers\x64"
-          "cdb dir exists: $(Test-Path $kit)" | Tee-Object "$out\cdb.txt"
-          if (-not (Test-Path "$kit\cdb.exe")) {
-            "NO cdb.exe -- shot 1 unavailable" | Tee-Object "$out\cdb.txt" -Append
-            Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10" -Directory |
-              ForEach-Object { $_.Name } | Out-File "$out\kits.txt"
-            exit 0
+          foreach ($t in 'cdb.exe','gflags.exe','ntsd.exe') {
+            Write-Host ("{0,-12} {1}" -f $t, (Test-Path (Join-Path $kit $t)))
           }
-          # Loader snaps must be armed before process creation; gflags does it per image.
-          if (Test-Path "$kit\gflags.exe") {
-            & "$kit\gflags.exe" -i (Split-Path -Leaf $exe) +sls 2>&1 | Tee-Object "$out\gflags.txt"
-          }
-          & "$kit\cdb.exe" -c "g; q" -- $exe --list 2>&1 | Tee-Object "$out\cdb.txt" -Append
-          Write-Host "--- lines the loader complained about ---"
-          Select-String -Path "$out\cdb.txt" -Pattern 'entry ?point|LDR:|Unable to|0xc0000139|not found' |
-            ForEach-Object { Write-Host $_.Line }
+          Write-Host "--- what is actually in that directory ---"
+          Get-ChildItem $kit -Filter *.exe -ErrorAction SilentlyContinue |
+            Select-Object -ExpandProperty Name | ForEach-Object { Write-Host "  $_" }
+          "kit=$kit" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
-      - name: Shot 2 and 3 - full import/export dumps and what the loader resolves
+      - name: Arm loader snaps and let the loader name the failure
         continue-on-error: true
         shell: pwsh
         run: |
-          $out = "$env:RUNNER_TEMP\diag"; New-Item -ItemType Directory -Force -Path $out | Out-Null
+          $kit = "${{ steps.tools.outputs.kit }}"
           $exe = "${{ steps.build.outputs.exe }}"
+          $leaf = Split-Path -Leaf $exe
 
-          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $vs = & $vswhere -latest -property installationPath
-          cmd /c "`"$vs\VC\Auxiliary\Build\vcvars64.bat`" >nul 2>&1 && set" | ForEach-Object {
-            if ($_ -match '^([^=]+)=(.*)$') { Set-Item -Path "env:$($matches[1])" -Value $matches[2] -ErrorAction SilentlyContinue }
+          if (Test-Path "$kit\gflags.exe") {
+            & "$kit\gflags.exe" -i $leaf +sls
+            $key = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$leaf"
+            Write-Host "--- registry readback (GlobalFlag 0x2 = show loader snaps) ---"
+            Get-ItemProperty -Path $key -ErrorAction SilentlyContinue | Format-List | Out-String | Write-Host
+          } else { Write-Host "no gflags.exe: loader snaps not armed" }
+
+          if (Test-Path "$kit\cdb.exe") {
+            # No `--`: cdb takes the target and its arguments positionally. The previous
+            # run passed `--` and produced no output at all.
+            Write-Host "--- cdb ---"
+            & "$kit\cdb.exe" -c "g;q" $exe --list 2>&1 | ForEach-Object { Write-Host $_ }
+            Write-Host "cdb exit: $LASTEXITCODE"
+          } else { Write-Host "no cdb.exe" }
+
+      - name: What Windows itself recorded about the crash
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          $exe = "${{ steps.build.outputs.exe }}"
+          & $exe --list 2>&1 | Out-String | Write-Host
+          Write-Host ("direct run exit: {0} (0x{1:x8})" -f $LASTEXITCODE, $LASTEXITCODE)
+          Start-Sleep -Seconds 5
+          foreach ($log in 'Application','System') {
+            Write-Host "--- $log, last 15 entries ---"
+            Get-WinEvent -LogName $log -MaxEvents 15 -ErrorAction SilentlyContinue |
+              ForEach-Object { Write-Host ("[{0}] {1}: {2}" -f $_.TimeCreated, $_.ProviderName, ($_.Message -replace "`r?`n", ' ' | Select-Object -First 1)) }
           }
-          $db = (Get-Command dumpbin.exe -ErrorAction SilentlyContinue).Source
-          "dumpbin: $db" | Tee-Object "$out\tools.txt"
-          if (-not $db) { exit 1 }
-
-          # Environment the loader will use.
-          $env:PATH -split ';' | Out-File "$out\path.txt"
-          Get-ChildItem (Split-Path $exe) -Filter *.dll | Select-Object Name,Length |
-            Out-File "$out\exedir-dlls.txt"
-
-          # Transitive walk of the static import graph.
-          $resolved = @{}; $queue = New-Object System.Collections.Queue
-          $queue.Enqueue($exe)
-          $searchDirs = @((Split-Path $exe), "$env:SystemRoot\System32") + ($env:PATH -split ';' | Where-Object { $_ })
-          $report = New-Object System.Collections.ArrayList
-          $depth = 0
-          while ($queue.Count -gt 0 -and $depth -lt 400) {
-            $img = $queue.Dequeue(); $depth++
-            $key = (Split-Path -Leaf $img).ToLower()
-            if ($resolved.ContainsKey($key)) { continue }
-            $resolved[$key] = $img
-            $raw = & $db /nologo /imports $img 2>&1
-            $raw | Out-File "$out\imports-$key.txt"
-            $cur = $null
-            foreach ($l in $raw) {
-              if ($l -match '^\s{2,6}(\S+\.dll)\s*$') { $cur = $matches[1] }
-              elseif ($cur -and $l -match '^\s{6,}([0-9A-Fa-f]+)\s+(\S+)\s*$') {
-                [void]$report.Add([pscustomobject]@{ Image = $key; Dll = $cur; Symbol = $matches[2] })
-              }
-            }
-            foreach ($d in ($report | Where-Object { $_.Image -eq $key } | Select-Object -ExpandProperty Dll -Unique)) {
-              $f = $null
-              foreach ($dir in $searchDirs) { $c = Join-Path $dir $d; if (Test-Path $c) { $f = $c; break } }
-              if ($f) { $queue.Enqueue($f) } else { "UNRESOLVED $d (needed by $key)" | Out-File "$out\unresolved.txt" -Append }
-            }
-          }
-          $report | Export-Csv -NoTypeInformation "$out\imports.csv"
-          "images walked: $($resolved.Count), import records: $($report.Count)" | Tee-Object "$out\tools.txt" -Append
-
-          # Exports of every image the loader would pick, plus its version.
-          foreach ($kv in $resolved.GetEnumerator()) {
-            $f = $kv.Value
-            $v = (Get-Item $f -ErrorAction SilentlyContinue).VersionInfo.FileVersion
-            "$($kv.Key)`t$v`t$f" | Out-File "$out\resolved.txt" -Append
-            & $db /nologo /exports $f 2>&1 | Out-File "$out\exports-$($kv.Key).txt"
-          }
-          Write-Host "=== resolved images ==="
-          Get-Content "$out\resolved.txt" | ForEach-Object { Write-Host "  $_" }
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: windows-loader-diag
-          path: ${{ runner.temp }}/diag
-          if-no-files-found: warn
