@@ -224,7 +224,7 @@ jobs:
             echo "- **macOS** - open the .dmg, drag fluxsmith to Applications, launch it once, then"
             echo "  allow it under System Settings > Privacy & Security > Open Anyway. If macOS"
             echo "  refuses outright, clear the download flag instead:"
-            echo '  \`xattr -dr com.apple.quarantine /Applications/fluxsmith.app\`"
+            echo "  \`xattr -dr com.apple.quarantine /Applications/fluxsmith.app\`"
             echo "- **Windows** - run the installer and choose More info > Run anyway. It installs"
             echo "  for the current user, so no administrator prompt appears."
             echo
