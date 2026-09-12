@@ -47,7 +47,44 @@ jobs:
         with: { node-version: 24, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: cargo test --workspace --exclude fluxsmith-app
+
       - run: cargo test -p fluxsmith-app --lib
+        if: runner.os != 'Windows'
+
+      # The Windows unit-test harness needs a manifest, and cargo cannot give it one.
+      # The loader states the problem itself under loader snaps:
+      #
+      #   LdrpReportError - ERROR: Locating export "TaskDialogIndirect" for DLL
+      #   "...\deps\fluxsmith_app-<hash>.exe" failed with status: 0xc0000139
+      #
+      # TaskDialogIndirect exists only in side-by-side Common-Controls 6, while
+      # System32 carries comctl32 5.82, so the process dies before its first test.
+      # The import is not ours - nothing in src/ calls TaskDialog - it arrives through
+      # the dialog plugin's dependency chain. tauri-build embeds an application
+      # manifest with `rustc-link-arg-bins`, which never reaches a test binary, which
+      # is why `build` has always passed here while this step never could.
+      #
+      # Two alternatives were measured and rejected: `rustc-link-arg-tests` covers
+      # tests/ only and cargo rejects it outright for a package with no test target,
+      # and plain `rustc-link-arg` does fix the harness but then collides with the
+      # bin's own manifest resource (link.exe 1123). An external `<module>.manifest`
+      # beside the executable is read by the loader whenever the module has no
+      # embedded one, which a Rust test harness never has, so it fixes the harness
+      # and touches neither the product nor any other target.
+      - name: cargo test -p fluxsmith-app --lib (external Common-Controls 6 manifest)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $lines = cargo test -p fluxsmith-app --lib --no-run --message-format=json
+          $exe = $lines | ForEach-Object { try { $_ | ConvertFrom-Json } catch { $null } } |
+            Where-Object { $_.reason -eq 'compiler-artifact' -and $_.executable -and $_.target.name -eq 'fluxsmith_app' } |
+            Select-Object -Last 1 -ExpandProperty executable
+          if (-not $exe) { Write-Error "could not find the fluxsmith_app test executable"; exit 1 }
+          $xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"><dependency><dependentAssembly><assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls" version="6.0.0.0" processorArchitecture="*" publicKeyToken="6595b64144ccf1df" language="*"/></dependentAssembly></dependency></assembly>'
+          [IO.File]::WriteAllText("$exe.manifest", $xml)
+          & $exe
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
       - run: pnpm test
 
   conformance:
