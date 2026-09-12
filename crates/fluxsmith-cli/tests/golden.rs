@@ -14,6 +14,45 @@ fn repo() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
 }
 
+/// Every reference here is built by applying an op-list that places `Device:R`,
+/// `Device:C` and friends, so this file needs KiCad's own symbol libraries: there is
+/// nothing in the repository to resolve those `lib_id`s against, and without them the
+/// write gate refuses the apply with `SYMBOL_NOT_FOUND`. Hosted CI has no KiCad, so
+/// the self-check is skipped there and enforced on the conformance runner, which sets
+/// `FLUXSMITH_CONFORMANCE=required` - the same contract the `kicad-cli` oracles use.
+fn kicad_symbols() -> Option<PathBuf> {
+    // An explicit override is authoritative: it must itself be usable and it suppresses
+    // the built-in locations, so the skip path can be exercised on a machine that does
+    // have KiCad installed.
+    let candidates: Vec<PathBuf> = match std::env::var("KICAD_SYMBOL_DIR") {
+        Ok(p) => vec![PathBuf::from(p)],
+        Err(_) => [
+            "/Applications/KiCad/KiCad.app/Contents/SharedSupport/symbols",
+            "C:\\Program Files\\KiCad\\10.0\\share\\kicad\\symbols",
+            "/usr/share/kicad/symbols",
+        ]
+        .iter()
+        .map(PathBuf::from)
+        .collect(),
+    };
+    if let Some(dir) = candidates
+        .into_iter()
+        .find(|c| c.join("Device.kicad_sym").exists())
+    {
+        return Some(dir);
+    }
+    let required = std::env::var("FLUXSMITH_CONFORMANCE")
+        .map(|v| v == "required")
+        .unwrap_or(false);
+    assert!(
+        !required,
+        "FLUXSMITH_CONFORMANCE=required but KiCad's symbol libraries were not found \
+         (set KICAD_SYMBOL_DIR or install KiCad 10)"
+    );
+    eprintln!("KiCad symbol libraries not installed: golden matcher self-check skipped");
+    None
+}
+
 fn build(task: &str, dir: &Path) -> PathBuf {
     let out = cli()
         .args(["new", dir.to_str().unwrap(), "ref"])
@@ -67,6 +106,9 @@ fn matches(expected: &Path, sch: &Path) -> (bool, String) {
 
 #[test]
 fn reference_matches_itself_and_refdes_shuffle_is_invisible() {
+    if kicad_symbols().is_none() {
+        return;
+    }
     let tmp = tempfile::tempdir().unwrap();
     let sch = build("decoupling_3v3", tmp.path());
     let expected = repo().join("tests/golden-set/tasks/decoupling_3v3/expected.json");
@@ -84,6 +126,9 @@ fn reference_matches_itself_and_refdes_shuffle_is_invisible() {
 
 #[test]
 fn wrong_value_and_wrong_net_are_reported() {
+    if kicad_symbols().is_none() {
+        return;
+    }
     let tmp = tempfile::tempdir().unwrap();
     let sch = build("rc_lowpass", tmp.path());
     let expected = repo().join("tests/golden-set/tasks/rc_lowpass/expected.json");
@@ -108,6 +153,9 @@ fn wrong_value_and_wrong_net_are_reported() {
 /// positive by construction, so the assertion is a flat zero across all of them.
 #[test]
 fn reg_row_misaligned_is_silent_on_every_golden_reference() {
+    if kicad_symbols().is_none() {
+        return;
+    }
     let mut checked = 0;
     let mut noisy: Vec<String> = Vec::new();
     let mut names: Vec<String> = std::fs::read_dir(repo().join("tests/golden-set/tasks"))
