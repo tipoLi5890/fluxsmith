@@ -1,15 +1,17 @@
 # TEMPORARY DIAGNOSTIC -- delete once a fix lands.
 #
-# Cause, established by the loader itself under loader snaps:
+# Cause, from the loader itself under loader snaps:
 #   LdrpReportError - ERROR: Locating export "TaskDialogIndirect" for DLL
 #   "...\deps\fluxsmith_app-<hash>.exe" failed with status: 0xc0000139
-# TaskDialogIndirect exists only in side-by-side Common-Controls 6; System32 has
-# comctl32 5.82. The test harness carries no manifest asking for 6, because
-# tauri-build embeds one with rustc-link-arg-bins, which never reaches a test
-# binary. rustc-link-arg-tests is not the answer either: it covers tests/ only,
-# and cargo rejects it outright for a package with no test target.
+# TaskDialogIndirect is only in side-by-side Common-Controls 6; System32 carries
+# comctl32 5.82. The test harness has no manifest asking for 6, because
+# tauri-build embeds one via rustc-link-arg-bins, which never reaches a test
+# binary, and rustc-link-arg-tests is not an alternative: it covers tests/ only,
+# and cargo rejects it for a package with no test target.
 #
-# Two candidates, tried here rather than on main.
+# Two candidates, measured here instead of on main. No here-strings anywhere:
+# PowerShell wants the terminator at column 1 and YAML block scalars forbid it,
+# which is what broke the previous revision of this file.
 name: diag-windows
 
 on:
@@ -35,28 +37,13 @@ jobs:
         shell: pwsh
         run: |
           $lines = cargo test -p fluxsmith-app --lib --no-run --message-format=json
-          $exe = $lines |
-            ForEach-Object { try { $_ | ConvertFrom-Json } catch { $null } } |
+          $exe = $lines | ForEach-Object { try { $_ | ConvertFrom-Json } catch { $null } } |
             Where-Object { $_.reason -eq 'compiler-artifact' -and $_.executable -and $_.target.name -eq 'fluxsmith_app' } |
             Select-Object -Last 1 -ExpandProperty executable
           Write-Host "exe: $exe"
-
-          # Windows reads <module>.manifest from the module's own directory when the
-          # module has no embedded manifest, which a Rust test harness never has.
-          $mf = "$exe.manifest"
-          @'
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
-  <dependency>
-    <dependentAssembly>
-      <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls"
-                        version="6.0.0.0" processorArchitecture="*"
-                        publicKeyToken="6595b64144ccf1df" language="*"/>
-    </dependentAssembly>
-  </dependency>
-</assembly>
-'@ | Set-Content -Path $mf -Encoding UTF8
-          Write-Host "wrote $mf"
+          $xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"><dependency><dependentAssembly><assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls" version="6.0.0.0" processorArchitecture="*" publicKeyToken="6595b64144ccf1df" language="*"/></dependentAssembly></dependency></assembly>'
+          [IO.File]::WriteAllText("$exe.manifest", $xml)
+          Write-Host "wrote $exe.manifest"
           & $exe --list 2>&1 | Select-Object -First 3 | Out-String | Write-Host
           $code = $LASTEXITCODE
           Write-Host ("A EXIT: {0} (0x{1:x8})" -f $code, $code)
@@ -66,42 +53,15 @@ jobs:
         continue-on-error: true
         shell: pwsh
         run: |
-          # Patch build.rs in place; never committed, restored at the end.
-          $patch = @'
-// SPDX-License-Identifier: Apache-2.0
-fn main() {
-    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows")
-        && std::env::var("CARGO_CFG_TARGET_ENV").as_deref() == Ok("msvc")
-    {
-        const MANIFEST: &str = r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
-  <dependency>
-    <dependentAssembly>
-      <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls"
-                        version="6.0.0.0" processorArchitecture="*"
-                        publicKeyToken="6595b64144ccf1df" language="*"/>
-    </dependentAssembly>
-  </dependency>
-</assembly>
-"#;
-        let out = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap())
-            .join("common-controls-v6.manifest");
-        std::fs::write(&out, MANIFEST).unwrap();
-        println!("cargo:rustc-link-arg=/MANIFEST:EMBED");
-        println!("cargo:rustc-link-arg=/MANIFESTINPUT:{}", out.display());
-    }
-    tauri_build::build()
-}
-'@
-          Set-Content -Path src-tauri/build.rs -Value $patch -Encoding UTF8
-
-          Write-Host "--- B1: does the lib test harness now run? ---"
+          $b64 = 'Ly8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEFwYWNoZS0yLjAKZm4gbWFpbigpIHsKICAgIGlmIHN0ZDo6ZW52Ojp2YXIoIkNBUkdPX0NGR19UQVJHRVRfT1MiKS5hc19kZXJlZigpID09IE9rKCJ3aW5kb3dzIikKICAgICAgICAmJiBzdGQ6OmVudjo6dmFyKCJDQVJHT19DRkdfVEFSR0VUX0VOViIpLmFzX2RlcmVmKCkgPT0gT2soIm1zdmMiKQogICAgewogICAgICAgIGxldCBvdXQgPSBzdGQ6OnBhdGg6OlBhdGhCdWY6OmZyb20oc3RkOjplbnY6OnZhcigiT1VUX0RJUiIpLnVud3JhcCgpKQogICAgICAgICAgICAuam9pbigiY2M2Lm1hbmlmZXN0Iik7CiAgICAgICAgc3RkOjpmczo6d3JpdGUoJm91dCwgTUFOSUZFU1QpLnVud3JhcCgpOwogICAgICAgIHByaW50bG4hKCJjYXJnbzpydXN0Yy1saW5rLWFyZz0vTUFOSUZFU1Q6RU1CRUQiKTsKICAgICAgICBwcmludGxuISgiY2FyZ286cnVzdGMtbGluay1hcmc9L01BTklGRVNUSU5QVVQ6e30iLCBvdXQuZGlzcGxheSgpKTsKICAgIH0KICAgIHRhdXJpX2J1aWxkOjpidWlsZCgpCn0KCmNvbnN0IE1BTklGRVNUOiAmc3RyID0gIjw/eG1sIHZlcnNpb249XCIxLjBcIiBlbmNvZGluZz1cIlVURi04XCIgc3RhbmRhbG9uZT1cInllc1wiPz48YXNzZW1ibHkgeG1sbnM9XCJ1cm46c2NoZW1hcy1taWNyb3NvZnQtY29tOmFzbS52MVwiIG1hbmlmZXN0VmVyc2lvbj1cIjEuMFwiPjxkZXBlbmRlbmN5PjxkZXBlbmRlbnRBc3NlbWJseT48YXNzZW1ibHlJZGVudGl0eSB0eXBlPVwid2luMzJcIiBuYW1lPVwiTWljcm9zb2Z0LldpbmRvd3MuQ29tbW9uLUNvbnRyb2xzXCIgdmVyc2lvbj1cIjYuMC4wLjBcIiBwcm9jZXNzb3JBcmNoaXRlY3R1cmU9XCIqXCIgcHVibGljS2V5VG9rZW49XCI2NTk1YjY0MTQ0Y2NmMWRmXCIgbGFuZ3VhZ2U9XCIqXCIvPjwvZGVwZW5kZW50QXNzZW1ibHk+PC9kZXBlbmRlbmN5PjwvYXNzZW1ibHk+IjsK'
+          [IO.File]::WriteAllBytes("src-tauri/build.rs", [Convert]::FromBase64String($b64))
+          Write-Host "--- patched build.rs ---"
+          Get-Content src-tauri/build.rs | ForEach-Object { Write-Host $_ }
+          Write-Host "--- B1: does the lib test harness run now? ---"
           cargo test -p fluxsmith-app --lib 2>&1 | Select-Object -Last 12 | Out-String | Write-Host
           Write-Host ("B1 cargo test exit: {0}" -f $LASTEXITCODE)
-
-          Write-Host "--- B2: does the bin still link (the duplicate-manifest risk)? ---"
+          Write-Host "--- B2: does the bin still link (duplicate-manifest risk)? ---"
           cargo build -p fluxsmith-app --bins 2>&1 | Select-Object -Last 12 | Out-String | Write-Host
           Write-Host ("B2 bin build exit: {0}" -f $LASTEXITCODE)
-
           git checkout -- src-tauri/build.rs
           Write-Host "build.rs restored"
