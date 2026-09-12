@@ -1,14 +1,15 @@
-# TEMPORARY DIAGNOSTIC -- delete once the cause is fixed or the step is scoped.
+# TEMPORARY DIAGNOSTIC -- delete once a fix lands.
 #
-# Last resort for the 0xc0000139 (STATUS_ENTRYPOINT_NOT_FOUND) that kills
-# `cargo test -p fluxsmith-app --lib` on windows-latest before any test runs.
+# Cause, established by the loader itself under loader snaps:
+#   LdrpReportError - ERROR: Locating export "TaskDialogIndirect" for DLL
+#   "...\deps\fluxsmith_app-<hash>.exe" failed with status: 0xc0000139
+# TaskDialogIndirect exists only in side-by-side Common-Controls 6; System32 has
+# comctl32 5.82. The test harness carries no manifest asking for 6, because
+# tauri-build embeds one with rustc-link-arg-bins, which never reaches a test
+# binary. rustc-link-arg-tests is not the answer either: it covers tests/ only,
+# and cargo rejects it outright for a package with no test target.
 #
-# Ruled out by earlier runs, with evidence: it is not WebView2Loader (absent from
-# the import table), it is not DLL shadowing (the only DLLs beside the executable
-# are proc-macro crates, none sharing a system name), and every one of the 24
-# direct imports resolves to a stock C:\Windows\System32 file. Hand-rolled PE
-# parsing produced two wrong answers, so this run does none: it asks the loader
-# to name the DLL and the entry point itself.
+# Two candidates, tried here rather than on main.
 name: diag-windows
 
 on:
@@ -18,7 +19,7 @@ permissions:
   contents: read
 
 jobs:
-  diag:
+  candidates:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,8 +30,8 @@ jobs:
         with: { node-version: 24, cache: pnpm }
       - run: pnpm install --frozen-lockfile
 
-      - name: Build the test executable
-        id: build
+      - name: Candidate A - an external .manifest beside the test executable
+        continue-on-error: true
         shell: pwsh
         run: |
           $lines = cargo test -p fluxsmith-app --lib --no-run --message-format=json
@@ -38,55 +39,69 @@ jobs:
             ForEach-Object { try { $_ | ConvertFrom-Json } catch { $null } } |
             Where-Object { $_.reason -eq 'compiler-artifact' -and $_.executable -and $_.target.name -eq 'fluxsmith_app' } |
             Select-Object -Last 1 -ExpandProperty executable
-          Write-Host "TEST EXE: $exe"
-          "exe=$exe" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          Write-Host "exe: $exe"
 
-      - name: Do the debugging tools exist? (state it, do not infer it)
-        id: tools
-        shell: pwsh
-        run: |
-          $kit = "${env:ProgramFiles(x86)}\Windows Kits\10\Debuggers\x64"
-          foreach ($t in 'cdb.exe','gflags.exe','ntsd.exe') {
-            Write-Host ("{0,-12} {1}" -f $t, (Test-Path (Join-Path $kit $t)))
-          }
-          Write-Host "--- what is actually in that directory ---"
-          Get-ChildItem $kit -Filter *.exe -ErrorAction SilentlyContinue |
-            Select-Object -ExpandProperty Name | ForEach-Object { Write-Host "  $_" }
-          "kit=$kit" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          # Windows reads <module>.manifest from the module's own directory when the
+          # module has no embedded manifest, which a Rust test harness never has.
+          $mf = "$exe.manifest"
+          @'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls"
+                        version="6.0.0.0" processorArchitecture="*"
+                        publicKeyToken="6595b64144ccf1df" language="*"/>
+    </dependentAssembly>
+  </dependency>
+</assembly>
+'@ | Set-Content -Path $mf -Encoding UTF8
+          Write-Host "wrote $mf"
+          & $exe --list 2>&1 | Select-Object -First 3 | Out-String | Write-Host
+          $code = $LASTEXITCODE
+          Write-Host ("A EXIT: {0} (0x{1:x8})" -f $code, $code)
+          if ($code -eq 0) { Write-Host "A WORKS" } else { Write-Host "A FAILS" }
 
-      - name: Arm loader snaps and let the loader name the failure
+      - name: Candidate B - rustc-link-arg for all targets, and does the bin still link
         continue-on-error: true
         shell: pwsh
         run: |
-          $kit = "${{ steps.tools.outputs.kit }}"
-          $exe = "${{ steps.build.outputs.exe }}"
-          $leaf = Split-Path -Leaf $exe
+          # Patch build.rs in place; never committed, restored at the end.
+          $patch = @'
+// SPDX-License-Identifier: Apache-2.0
+fn main() {
+    if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows")
+        && std::env::var("CARGO_CFG_TARGET_ENV").as_deref() == Ok("msvc")
+    {
+        const MANIFEST: &str = r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity type="win32" name="Microsoft.Windows.Common-Controls"
+                        version="6.0.0.0" processorArchitecture="*"
+                        publicKeyToken="6595b64144ccf1df" language="*"/>
+    </dependentAssembly>
+  </dependency>
+</assembly>
+"#;
+        let out = std::path::PathBuf::from(std::env::var("OUT_DIR").unwrap())
+            .join("common-controls-v6.manifest");
+        std::fs::write(&out, MANIFEST).unwrap();
+        println!("cargo:rustc-link-arg=/MANIFEST:EMBED");
+        println!("cargo:rustc-link-arg=/MANIFESTINPUT:{}", out.display());
+    }
+    tauri_build::build()
+}
+'@
+          Set-Content -Path src-tauri/build.rs -Value $patch -Encoding UTF8
 
-          if (Test-Path "$kit\gflags.exe") {
-            & "$kit\gflags.exe" -i $leaf +sls
-            $key = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\$leaf"
-            Write-Host "--- registry readback (GlobalFlag 0x2 = show loader snaps) ---"
-            Get-ItemProperty -Path $key -ErrorAction SilentlyContinue | Format-List | Out-String | Write-Host
-          } else { Write-Host "no gflags.exe: loader snaps not armed" }
+          Write-Host "--- B1: does the lib test harness now run? ---"
+          cargo test -p fluxsmith-app --lib 2>&1 | Select-Object -Last 12 | Out-String | Write-Host
+          Write-Host ("B1 cargo test exit: {0}" -f $LASTEXITCODE)
 
-          if (Test-Path "$kit\cdb.exe") {
-            # No `--`: cdb takes the target and its arguments positionally. The previous
-            # run passed `--` and produced no output at all.
-            Write-Host "--- cdb ---"
-            & "$kit\cdb.exe" -c "g;q" $exe --list 2>&1 | ForEach-Object { Write-Host $_ }
-            Write-Host "cdb exit: $LASTEXITCODE"
-          } else { Write-Host "no cdb.exe" }
+          Write-Host "--- B2: does the bin still link (the duplicate-manifest risk)? ---"
+          cargo build -p fluxsmith-app --bins 2>&1 | Select-Object -Last 12 | Out-String | Write-Host
+          Write-Host ("B2 bin build exit: {0}" -f $LASTEXITCODE)
 
-      - name: What Windows itself recorded about the crash
-        continue-on-error: true
-        shell: pwsh
-        run: |
-          $exe = "${{ steps.build.outputs.exe }}"
-          & $exe --list 2>&1 | Out-String | Write-Host
-          Write-Host ("direct run exit: {0} (0x{1:x8})" -f $LASTEXITCODE, $LASTEXITCODE)
-          Start-Sleep -Seconds 5
-          foreach ($log in 'Application','System') {
-            Write-Host "--- $log, last 15 entries ---"
-            Get-WinEvent -LogName $log -MaxEvents 15 -ErrorAction SilentlyContinue |
-              ForEach-Object { Write-Host ("[{0}] {1}: {2}" -f $_.TimeCreated, $_.ProviderName, ($_.Message -replace "`r?`n", ' ' | Select-Object -First 1)) }
-          }
+          git checkout -- src-tauri/build.rs
+          Write-Host "build.rs restored"
