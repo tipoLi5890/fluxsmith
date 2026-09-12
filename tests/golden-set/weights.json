@@ -1,0 +1,8 @@
+{
+  "$comment": "Task weights for scripts/golden-run.mjs (README: G1-G7 weigh 1, G8 question 0.5, G9/G10 safety 1.5). Unlisted tasks weigh 1.",
+  "weights": {
+    "power_subsheet": 0.5,
+    "ldo_3v3": 1.5,
+    "resistor_array": 1.5
+  }
+}

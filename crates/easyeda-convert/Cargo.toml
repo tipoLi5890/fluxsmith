@@ -1,0 +1,17 @@
+[package]
+name = "easyeda-convert"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "EasyEDA / LCSC CAD JSON to fluxsmith PartSpec (symbol + footprint), ported from the JLC2KiCadLib (MIT) conversion rules"
+
+[dependencies]
+sch-libwrite = { path = "../sch-libwrite" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+kicad-sexpr = { path = "../kicad-sexpr" }
+sch-read = { path = "../sch-read" }
+tempfile = { workspace = true }

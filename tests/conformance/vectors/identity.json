@@ -1,0 +1,86 @@
+{
+  "$comment": "Frozen UUIDv5 identity vectors (I15). namespace = root sheet uuid. Any change here is a major format change that needs a migrator (CLAUDE.md red line 1). Regenerate only on purpose with FLUXSMITH_UPDATE_VECTORS=1.",
+  "namespace_root_uuid": "11111111-1111-4111-8111-111111111111",
+  "vectors": {
+    "anchor_pt": {
+      "seed": "pt|127000000|254000000",
+      "uuid": "b2d3c26c-907c-5080-aa38-c85295ca84f6"
+    },
+    "bus": {
+      "seed": "bus|0|254000000|127000000|254000000",
+      "uuid": "c4333a2d-c8d8-5f58-b8b9-bed213f13ed2"
+    },
+    "bus_entry": {
+      "seed": "bus_entry|127000000|254000000",
+      "uuid": "b83c465c-7a5a-5f12-bd37-f9d0a80d16ac"
+    },
+    "junction": {
+      "seed": "junction|127000000|254000000",
+      "uuid": "c0003f87-d9b5-5229-af09-97ab0d168626"
+    },
+    "keyed_rect": {
+      "seed": "rectangle|key|blk-frame",
+      "uuid": "99005488-9448-56f9-b603-84c313e7bce9"
+    },
+    "label_global": {
+      "seed": "label|global|SDA|pt|127000000|254000000",
+      "uuid": "11fdda70-a849-529b-9245-e8676df24040"
+    },
+    "label_local": {
+      "seed": "label|local|SDA|pin|U1|u1|7|d0",
+      "uuid": "34bf76a8-8a8a-598c-a0da-9d5eded4e75f"
+    },
+    "no_connect": {
+      "seed": "no_connect|pin|U1|u1|7|d0",
+      "uuid": "3b5ce4dc-29aa-54f2-84d1-9c6a43648522"
+    },
+    "pin": {
+      "seed": "pin|R1|u1|1|d0",
+      "uuid": "d7040403-e679-5af9-86c8-7b6f49a4e329"
+    },
+    "pin_dup1": {
+      "seed": "pin|R1|u1|1|d1",
+      "uuid": "5e15b0aa-3702-572d-ab4b-84d4933d5d5f"
+    },
+    "power": {
+      "seed": "power|GND|pin|C1|u1|2|d0",
+      "uuid": "db434328-44cc-5e55-a6e5-bd2791a8c85f"
+    },
+    "rect": {
+      "seed": "rectangle|127000000|254000000|0|254000000",
+      "uuid": "1ef3f79b-4f13-50d3-8f4d-fd2e9a64c129"
+    },
+    "sheet": {
+      "seed": "sheet|power.kicad_sch|power",
+      "uuid": "05513007-5d52-5a13-8db6-2627e83d6670"
+    },
+    "sheet_file": {
+      "seed": "sheetfile|power.kicad_sch",
+      "uuid": "2d07b9b3-94e1-5c3e-a937-34251fdc01bd"
+    },
+    "sheet_pin": {
+      "seed": "sheetpin|power.kicad_sch|power|VIN",
+      "uuid": "1d60a103-2d06-5dbb-93ed-19af5bb718f4"
+    },
+    "symbol": {
+      "seed": "symbol|R1",
+      "uuid": "93791a1d-dd3f-5d03-aa5d-94608bde0ff7"
+    },
+    "symbol_unit2": {
+      "seed": "symbol|U1|u2",
+      "uuid": "7871db70-e194-57ca-8c6e-70b448f02355"
+    },
+    "text": {
+      "seed": "text|127000000|254000000",
+      "uuid": "9d318e5d-12cd-5d6c-8c3c-1b39cd0a4641"
+    },
+    "wire": {
+      "seed": "wire|0|254000000|127000000|254000000",
+      "uuid": "4b52f902-9110-5e80-a1c8-76651cf3f6c1"
+    },
+    "wire_reversed": {
+      "seed": "wire|0|254000000|127000000|254000000",
+      "uuid": "4b52f902-9110-5e80-a1c8-76651cf3f6c1"
+    }
+  }
+}

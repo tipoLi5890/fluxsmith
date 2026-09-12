@@ -1,0 +1,27 @@
+{
+  "anchored_nets": {
+    "GND": [
+      "Device:R|1e4|#*",
+      "Device:R|1e4|#*",
+      "Device:R|1e4|#*",
+      "Device:R|1e4|#*"
+    ],
+    "IN0": [
+      "Device:R|1e4|#*"
+    ],
+    "IN3": [
+      "Device:R|1e4|#*"
+    ]
+  },
+  "anchors": [
+    "GND",
+    "IN0",
+    "IN3"
+  ],
+  "components": {
+    "Device:R|1e4|": 4
+  },
+  "nets": [],
+  "schema_version": 1,
+  "task": "resistor_array"
+}

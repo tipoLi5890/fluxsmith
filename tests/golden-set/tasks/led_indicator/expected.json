@@ -1,0 +1,26 @@
+{
+  "anchored_nets": {
+    "GND": [
+      "Device:LED||#1"
+    ],
+    "LED_CTRL": [
+      "Device:R|1e3|#*"
+    ]
+  },
+  "anchors": [
+    "GND",
+    "LED_CTRL"
+  ],
+  "components": {
+    "Device:LED||": 1,
+    "Device:R|1e3|": 1
+  },
+  "nets": [
+    [
+      "Device:LED||#2",
+      "Device:R|1e3|#*"
+    ]
+  ],
+  "schema_version": 1,
+  "task": "led_indicator"
+}

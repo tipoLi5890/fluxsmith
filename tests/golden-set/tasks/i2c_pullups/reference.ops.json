@@ -1,0 +1,27 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "place_pullup",
+   "net": "SDA",
+   "rail_net": "+3V3",
+   "x_mil": 3000,
+   "y_mil": 3000,
+   "designator": "R1",
+   "value": "4.7k"
+  },
+  {
+   "op": "place_pullup",
+   "net": "SCL",
+   "rail_net": "+3V3",
+   "x_mil": 3600,
+   "y_mil": 3000,
+   "designator": "R2",
+   "value": "4.7k"
+  },
+  {
+   "op": "place_pwr_flag",
+   "at": "R1.1"
+  }
+ ]
+}

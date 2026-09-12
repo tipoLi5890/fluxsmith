@@ -1,0 +1,89 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "00001400-0000-4000-8000-000000001400")
+	(paper "A4")
+	(lib_symbols
+		(symbol "Custom:R"
+			(pin_names (offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R" (at 0 6.35 0) (effects (font (size 1.27 1.27))))
+			(property "Value" "R" (at 0 -6.35 0) (effects (font (size 1.27 1.27))))
+			(property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(symbol "R_1_1"
+				(rectangle (start -1.016 2.54) (end 1.016 -2.54) (stroke (width 0.254) (type default)) (fill (type none)))
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "~" (effects (font (size 1.27 1.27))))
+					(number "1" (effects (font (size 1.27 1.27))))
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "~" (effects (font (size 1.27 1.27))))
+					(number "2" (effects (font (size 1.27 1.27))))
+				)
+			)
+		)
+	)
+	(wire
+		(pts (xy 60 40) (xy 80 40))
+		(stroke (width 0) (type default))
+		(uuid "00001401-0000-4000-8000-000000001401")
+	)
+	(symbol
+		(lib_id "Custom:R")
+		(at 70 43.81 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00001402-0000-4000-8000-000000001402")
+		(property "Reference" "R1" (at 70 40.81 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "R" (at 70 46.81 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 70 43.81 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "" (at 70 43.81 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(instances
+			(project "midpin"
+				(path "/00001400-0000-4000-8000-000000001400"
+					(reference "R1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Custom:R")
+		(at 60 43.81 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00001403-0000-4000-8000-000000001403")
+		(property "Reference" "R2" (at 60 40.81 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "R" (at 60 46.81 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 60 43.81 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "" (at 60 43.81 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(instances
+			(project "midpin"
+				(path "/00001400-0000-4000-8000-000000001400"
+					(reference "R2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

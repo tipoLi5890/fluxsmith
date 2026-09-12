@@ -1,0 +1,31 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "add_sheet",
+   "name": "power",
+   "file": "power.kicad_sch",
+   "at": [
+    6000,
+    3000
+   ],
+   "size": [
+    800,
+    600
+   ],
+   "pins": [
+    {
+     "name": "VIN",
+     "type": "input",
+     "side": "left"
+    },
+    {
+     "name": "VOUT",
+     "type": "output",
+     "side": "right"
+    }
+   ],
+   "create": true
+  }
+ ]
+}

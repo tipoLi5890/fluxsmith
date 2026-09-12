@@ -1,0 +1,31 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "place_decoupling",
+   "power_net": "+3V3",
+   "x_mil": 3000,
+   "y_mil": 3000,
+   "designator": "C1",
+   "value": "100n",
+   "gnd_net": "GND"
+  },
+  {
+   "op": "place_decoupling",
+   "power_net": "+3V3",
+   "x_mil": 3600,
+   "y_mil": 3000,
+   "designator": "C2",
+   "value": "100n",
+   "gnd_net": "GND"
+  },
+  {
+   "op": "place_pwr_flag",
+   "at": "C1.1"
+  },
+  {
+   "op": "place_pwr_flag",
+   "at": "C1.2"
+  }
+ ]
+}

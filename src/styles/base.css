@@ -1,0 +1,46 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+@import "./tokens.css";
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  background: var(--bg-1);
+  color: var(--gray-1000);
+  font-family: var(--font-sans), var(--font-cjk, sans-serif);
+  font-size: var(--text-copy);
+  line-height: var(--lh-copy);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  user-select: none;
+}
+.mono, code, kbd, .fs-mono { font-family: var(--font-mono), var(--font-cjk, monospace); font-size: var(--text-mono); font-variant-numeric: tabular-nums; }
+.num { font-variant-numeric: tabular-nums; }
+.selectable { user-select: text; }
+a { color: var(--blue-900); text-decoration: none; }
+a:hover { text-decoration: underline; }
+:focus-visible { outline: var(--focus-ring); outline-offset: 2px; border-radius: var(--radius-1); }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1 { font-size: var(--text-h1); font-weight: 600; margin: 0; line-height: var(--lh-label); }
+h2 { font-size: var(--text-h2); font-weight: 600; margin: 0; line-height: var(--lh-label); }
+h3 { font-size: var(--text-label); font-weight: 600; margin: 0; line-height: var(--lh-label); }
+p { margin: 0; }
+hr { border: 0; border-top: 1px solid var(--gray-400); margin: var(--space-3) 0; }
+.muted { color: var(--gray-900); }
+.label { font-size: var(--text-label); line-height: var(--lh-label); font-weight: 500; }
+.label-sm { font-size: var(--text-label-sm); line-height: var(--lh-label); }
+.copy-sm { font-size: var(--text-copy-sm); }
+.row { display: flex; align-items: center; gap: var(--space-2); }
+.col { display: flex; flex-direction: column; gap: var(--space-2); }
+.grow { flex: 1 1 auto; min-width: 0; }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.scroll { overflow: auto; }
+.icon { width: 16px; height: 16px; flex: 0 0 auto; stroke: currentColor; }
+.icon-sm { width: 14px; height: 14px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--gray-500); border-radius: var(--radius-pill); border: 2px solid var(--bg-1); }
+::-webkit-scrollbar-track { background: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}

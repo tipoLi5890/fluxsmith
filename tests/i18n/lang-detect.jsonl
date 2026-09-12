@@ -1,0 +1,64 @@
+{"text": "在 U1 每個 VDD 加 100n", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "在 U1 每个 VDD 加 100n", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "R3 改 10k", "ui": "zh-Hant", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "R3 改 10k", "ui": "zh-Hans", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "R3 改 10k", "ui": "en", "prev": "zh-Hant", "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "R3 改 10k", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "R3 改 10k", "ui": "ja", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "Change R3 to 10k", "ui": "zh-Hant", "prev": null, "expect": "en", "locale": "zh-TW"}
+{"text": "把這個接地", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "把这个接地", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "這顆的 VDD 接到哪", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "这颗的 VDD 接到哪", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "U1のVDDはどこに接続されていますか", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "基板設計変更", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "東京駅の回路図", "ui": "zh-Hant", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "回路図を確認してください", "ui": "zh-Hans", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "STM32G0 最小系統，USB-C 供電，SWD", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "STM32G0 最小系统，USB-C 供电，SWD", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "STM32G0 minimal system with USB-C power and SWD", "ui": "zh-Hant", "prev": null, "expect": "en", "locale": "zh-TW"}
+{"text": "LDO 用 AP2112K-3.3，輸入輸出各 1µF", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "LDO 用 AP2112K-3.3，输入输出各 1µF", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "+3V3 と GND を power port にする", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "幫我 review 一下", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "帮我 review 一下", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "/review", "ui": "zh-Hant", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "/build", "ui": "ja", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "VBUS 直接接到 +3V3", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "VBUS 直接接到 +3V3", "ui": "en", "prev": "zh-Hans", "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "Connect VBUS to +3V3 directly", "ui": "ja", "prev": null, "expect": "en", "locale": "zh-TW"}
+{"text": "去耦電容離 pin 200 mil 內", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "去耦电容离 pin 200 mil 内", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "デカップリングコンデンサは pin から 200 mil 以内", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "OK", "ui": "zh-Hant", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "ok 繼續", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "ok 继续", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "はい、続けて", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "U1 VDD", "ui": "zh-Hant", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "U1 VDD", "ui": "ja", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "100n 0402 X7R", "ui": "en", "prev": null, "expect": "en", "locale": "zh-TW"}
+{"text": "C1 C2 C3 GND", "ui": "zh-Hans", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "為什麼這裡會硬停", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "为什么这里会停下来", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "なぜここで停止したのですか", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "Why did it stop here?", "ui": "zh-Hant", "prev": null, "expect": "en", "locale": "zh-TW"}
+{"text": "以後去耦一律 0402", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "以后去耦一律 0402", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "今後デカップリングは全て 0402 で", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "From now on always use 0402 for decoupling", "ui": "zh-Hans", "prev": null, "expect": "en", "locale": "zh-TW"}
+{"text": "這張圖的 +3V3 接到哪些元件？", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "这张图的 +3V3 接到哪些元件？", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "この回路の +3V3 はどの部品に接続されていますか？", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "回到第 3 輪之前", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "回到第 3 轮之前", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "ターン 3 の前に戻す", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "Revert to before turn 3", "ui": "zh-Hant", "prev": null, "expect": "en", "locale": "zh-TW"}
+{"text": "加一顆 100n 到 U1 VDD", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "加一颗 100n 到 U1 VDD", "ui": "en", "prev": null, "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "U1 の VDD に 100n を 1 個追加", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "把 LED 接到 PA5，限流 1k", "ui": "en", "prev": null, "expect": "zh-Hant", "locale": "zh-TW"}
+{"text": "把 LED 接到 PA5，限流 1k", "ui": "en", "prev": "zh-Hans", "expect": "zh-Hans", "locale": "zh-TW"}
+{"text": "LED を PA5 に接続、電流制限 1k", "ui": "en", "prev": null, "expect": "ja", "locale": "zh-TW"}
+{"text": "R3 改 10k", "ui": "en", "prev": null, "locale": "zh-CN", "expect": "zh-Hans"}
+{"text": "基板設計変更", "ui": "zh-Hant", "prev": null, "locale": "zh-TW", "expect": "ja"}
+{"text": "回路図", "ui": "zh-Hant", "prev": null, "locale": "zh-TW", "expect": "ja"}

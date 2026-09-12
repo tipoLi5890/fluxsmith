@@ -1,0 +1,233 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "00000400-0000-4000-8000-000000000400")
+	(paper "A4")
+	(lib_symbols
+		(symbol "Custom:OPA2"
+			(pin_names
+				(offset 0.254)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "A"
+				(at 0 6.35 0)
+				(effects (font (size 1.27 1.27)))
+			)
+			(property "Value" "OPA2"
+				(at 0 -6.35 0)
+				(effects (font (size 1.27 1.27)))
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects (font (size 1.27 1.27)) (hide yes))
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects (font (size 1.27 1.27)) (hide yes))
+			)
+			(symbol "OPA2_0_1"
+				(pin power_in line
+					(at 0 7.62 270)
+					(length 3.81)
+					(hide yes)
+					(name "V+" (effects (font (size 1.27 1.27))))
+					(number "8" (effects (font (size 1.27 1.27))))
+				)
+				(pin power_in line
+					(at 0 -7.62 90)
+					(length 3.81)
+					(hide yes)
+					(name "V-" (effects (font (size 1.27 1.27))))
+					(number "4" (effects (font (size 1.27 1.27))))
+				)
+			)
+			(symbol "OPA2_1_1"
+				(polyline
+					(pts (xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08))
+					(stroke (width 0.254) (type default))
+					(fill (type background))
+				)
+				(pin output line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name "OUT" (effects (font (size 1.27 1.27))))
+					(number "1" (effects (font (size 1.27 1.27))))
+				)
+				(pin input line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "INN" (effects (font (size 1.27 1.27))))
+					(number "2" (effects (font (size 1.27 1.27))))
+				)
+				(pin input line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "INP" (effects (font (size 1.27 1.27))))
+					(number "3" (effects (font (size 1.27 1.27))))
+				)
+			)
+			(symbol "OPA2_2_1"
+				(polyline
+					(pts (xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08))
+					(stroke (width 0.254) (type default))
+					(fill (type background))
+				)
+				(pin output line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name "OUT" (effects (font (size 1.27 1.27))))
+					(number "7" (effects (font (size 1.27 1.27))))
+				)
+				(pin input line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "INN" (effects (font (size 1.27 1.27))))
+					(number "6" (effects (font (size 1.27 1.27))))
+				)
+				(pin input line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "INP" (effects (font (size 1.27 1.27))))
+					(number "5" (effects (font (size 1.27 1.27))))
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Custom:OPA2")
+		(at 50.8 50.8 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00000411-0000-4000-8000-000000000411")
+		(property "Reference" "A1"
+			(at 50.8 47.8 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "OPA2"
+			(at 50.8 53.8 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" ""
+			(at 50.8 50.8 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 50.8 50.8 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(instances
+			(project "multiunit"
+				(path "/00000400-0000-4000-8000-000000000400"
+					(reference "A1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts (xy 58.419999999999995 50.8) (xy 66.03999999999999 50.8))
+		(stroke (width 0) (type default))
+		(uuid "00000412-0000-4000-8000-000000000412")
+	)
+	(label "OA"
+		(at 66.03999999999999 50.8 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "00000413-0000-4000-8000-000000000413")
+	)
+	(wire
+		(pts (xy 43.18 53.34) (xy 35.559999999999995 53.34))
+		(stroke (width 0) (type default))
+		(uuid "00000414-0000-4000-8000-000000000414")
+	)
+	(label "NA"
+		(at 35.559999999999995 53.34 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "00000415-0000-4000-8000-000000000415")
+	)
+	(wire
+		(pts (xy 43.18 48.26) (xy 35.559999999999995 48.26))
+		(stroke (width 0) (type default))
+		(uuid "00000416-0000-4000-8000-000000000416")
+	)
+	(label "PA"
+		(at 35.559999999999995 48.26 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "00000417-0000-4000-8000-000000000417")
+	)
+	(symbol
+		(lib_id "Custom:OPA2")
+		(at 101.6 50.8 0)
+		(unit 2)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00000418-0000-4000-8000-000000000418")
+		(property "Reference" "A1"
+			(at 101.6 47.8 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "OPA2"
+			(at 101.6 53.8 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" ""
+			(at 101.6 50.8 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 101.6 50.8 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(instances
+			(project "multiunit"
+				(path "/00000400-0000-4000-8000-000000000400"
+					(reference "A1")
+					(unit 2)
+				)
+			)
+		)
+	)
+	(wire
+		(pts (xy 109.22 50.8) (xy 116.83999999999999 50.8))
+		(stroke (width 0) (type default))
+		(uuid "00000419-0000-4000-8000-000000000419")
+	)
+	(label "OB"
+		(at 116.83999999999999 50.8 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "0000041a-0000-4000-8000-00000000041a")
+	)
+	(wire
+		(pts (xy 93.97999999999999 53.34) (xy 86.36 53.34))
+		(stroke (width 0) (type default))
+		(uuid "0000041b-0000-4000-8000-00000000041b")
+	)
+	(label "NB"
+		(at 86.36 53.34 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "0000041c-0000-4000-8000-00000000041c")
+	)
+	(wire
+		(pts (xy 93.97999999999999 48.26) (xy 86.36 48.26))
+		(stroke (width 0) (type default))
+		(uuid "0000041d-0000-4000-8000-00000000041d")
+	)
+	(label "PB"
+		(at 86.36 48.26 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "0000041e-0000-4000-8000-00000000041e")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

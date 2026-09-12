@@ -1,0 +1,26 @@
+{
+  "anchored_nets": {
+    "GND": [
+      "Device:R|2.7e4|#*"
+    ],
+    "VBUS": [
+      "Device:R|1e5|#*"
+    ],
+    "VSENSE": [
+      "Device:R|1e5|#*",
+      "Device:R|2.7e4|#*"
+    ]
+  },
+  "anchors": [
+    "GND",
+    "VBUS",
+    "VSENSE"
+  ],
+  "components": {
+    "Device:R|1e5|": 1,
+    "Device:R|2.7e4|": 1
+  },
+  "nets": [],
+  "schema_version": 1,
+  "task": "voltage_divider"
+}

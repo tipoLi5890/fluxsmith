@@ -1,0 +1,21 @@
+[package]
+name = "sch-write"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Op handlers, identity (UUIDv5), integrity gates, net gate, atomic/txn writes, checkpoint/restore, journal."
+
+[dependencies]
+kicad-sexpr = { path = "../kicad-sexpr" }
+sch-model = { path = "../sch-model" }
+sch-read = { path = "../sch-read" }
+sch-net = { path = "../sch-net" }
+sch-ops = { path = "../sch-ops" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }
+sha2 = { workspace = true }
+hex = "0.4"
+tempfile = { workspace = true }

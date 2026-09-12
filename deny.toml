@@ -1,0 +1,34 @@
+# cargo-deny policy (CLAUDE.md "授權": Apache-2.0 / MIT / BSD-class only; no GPL/LGPL).
+# Run: cargo install cargo-deny && cargo deny check licenses
+[graph]
+all-features = true
+
+[licenses]
+allow = [
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "MIT",
+  "MIT-0",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Zlib",
+  "BSL-1.0",
+  "Unicode-3.0",
+  "Unicode-DFS-2016",
+  "CC0-1.0",
+  "MPL-2.0",
+  "OpenSSL",
+  "0BSD",
+]
+confidence-threshold = 0.8
+
+[bans]
+multiple-versions = "allow"
+deny = [
+  { crate = "kicad_mod_tree", reason = "GPL (red line 10)" },
+  { crate = "kiutils_kicad", reason = "alpha, not a dependency (red line 9)" },
+]
+
+[advisories]
+ignore = []

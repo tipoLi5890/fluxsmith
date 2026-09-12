@@ -1,0 +1,120 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "00000501-0000-4000-8000-000000000501")
+	(paper "A4")
+	(lib_symbols
+		(symbol "Device:R"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(effects (font (size 1.27 1.27)))
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(effects (font (size 1.27 1.27)))
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(effects (font (size 1.27 1.27)) (hide yes))
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects (font (size 1.27 1.27)) (hide yes))
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "" (effects (font (size 1.27 1.27))))
+					(number "1" (effects (font (size 1.27 1.27))))
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "" (effects (font (size 1.27 1.27))))
+					(number "2" (effects (font (size 1.27 1.27))))
+				)
+			)
+		)
+	)
+	(bus
+		(pts (xy 76.2 76.2) (xy 114.3 76.2))
+		(stroke (width 0) (type default))
+		(uuid "00000517-0000-4000-8000-000000000517")
+	)
+	(hierarchical_label "D[0..7]"
+		(shape input)
+		(at 76.2 76.2 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "00000518-0000-4000-8000-000000000518")
+	)
+	(bus_entry
+		(at 81.28 76.2)
+		(size 2.54 2.54)
+		(stroke (width 0) (type default))
+		(uuid "00000519-0000-4000-8000-000000000519")
+	)
+	(wire
+		(pts (xy 83.82 78.74) (xy 96.52 78.74))
+		(stroke (width 0) (type default))
+		(uuid "0000051a-0000-4000-8000-00000000051a")
+	)
+	(label "D0"
+		(at 88.9 78.74 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "0000051b-0000-4000-8000-00000000051b")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 96.52 82.55 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "0000051c-0000-4000-8000-00000000051c")
+		(property "Reference" "R10"
+			(at 96.52 79.55 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "10k"
+			(at 96.52 85.55 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" ""
+			(at 96.52 82.55 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 96.52 82.55 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(instances
+			(project "hbusren"
+				(path "/00000500-0000-4000-8000-000000000500/00000502-0000-4000-8000-000000000502"
+					(reference "R10")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(embedded_fonts no)
+)

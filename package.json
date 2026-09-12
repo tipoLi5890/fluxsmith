@@ -1,0 +1,47 @@
+{
+  "name": "fluxsmith",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm lint:emoji && pnpm lint:design && pnpm lint:cache && pnpm lint:i18n && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "tauri": "tauri",
+    "app:dev": "tauri dev",
+    "app:build": "tauri build",
+    "lint:emoji": "node scripts/emoji-lint.mjs",
+    "lint:design": "node scripts/design-lint.mjs",
+    "gen:catalog": "node scripts/gen-model-catalog.mjs",
+    "golden:run": "node scripts/golden-run.mjs",
+    "lint:cache": "node scripts/cache-lint.mjs",
+    "lint:i18n": "node scripts/i18n-lint.mjs",
+    "replay:record": "node scripts/replay-record.mjs",
+    "replay": "node scripts/replay.mjs"
+  },
+  "dependencies": {
+    "@mariozechner/pi-agent-core": "0.73.1",
+    "@mariozechner/pi-ai": "0.73.1",
+    "@tauri-apps/api": "^2.11.1",
+    "@tauri-apps/plugin-dialog": "^2",
+    "@tauri-apps/plugin-opener": "^2",
+    "geist": "^1",
+    "lucide-react": "^0.550.0",
+    "react": "^19",
+    "react-dom": "^19",
+    "yaml": "^2",
+    "zustand": "^5"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.11.4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^5",
+    "typescript": "^5",
+    "vite": "^7",
+    "vitest": "^3",
+    "jsdom": "^26"
+  }
+}

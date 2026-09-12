@@ -1,0 +1,28 @@
+{
+  "anchored_nets": {
+    "D+": [
+      "Connector:*4pins||#2"
+    ],
+    "D-": [
+      "Connector:*4pins||#3"
+    ],
+    "GND": [
+      "Connector:*4pins||#4"
+    ],
+    "VBUS": [
+      "Connector:*4pins||#1"
+    ]
+  },
+  "anchors": [
+    "D+",
+    "D-",
+    "GND",
+    "VBUS"
+  ],
+  "components": {
+    "Connector:*4pins||": 1
+  },
+  "nets": [],
+  "schema_version": 1,
+  "task": "header_4pin"
+}

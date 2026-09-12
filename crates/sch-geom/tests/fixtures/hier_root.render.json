@@ -1,0 +1,903 @@
+{
+  "sheet_path": "/",
+  "file": "tests/conformance/fixtures/hier/hier_root.kicad_sch",
+  "paper": "A4",
+  "paper_mm": [
+    297.0,
+    210.0
+  ],
+  "title_block": {},
+  "symbols": [
+    {
+      "reference": "#PWR01",
+      "value": "+3V3",
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000001",
+      "lib_id": "power:+3V3",
+      "unit": 1,
+      "dnp": false,
+      "is_power": true,
+      "at": [
+        2000.0,
+        1800.0
+      ],
+      "rotation": 0.0,
+      "mirror": "none",
+      "shapes": [
+        {
+          "kind": "polyline",
+          "pts": [
+            [
+              1970.0,
+              1750.0
+            ],
+            [
+              2000.0,
+              1700.0
+            ]
+          ],
+          "stroke": {
+            "width_mil": 0.0,
+            "style": "default"
+          },
+          "fill": "none"
+        },
+        {
+          "kind": "polyline",
+          "pts": [
+            [
+              2000.0,
+              1700.0
+            ],
+            [
+              2030.0,
+              1750.0
+            ]
+          ],
+          "stroke": {
+            "width_mil": 0.0,
+            "style": "default"
+          },
+          "fill": "none"
+        },
+        {
+          "kind": "polyline",
+          "pts": [
+            [
+              2000.0,
+              1800.0
+            ],
+            [
+              2000.0,
+              1700.0
+            ]
+          ],
+          "stroke": {
+            "width_mil": 0.0,
+            "style": "default"
+          },
+          "fill": "none"
+        }
+      ],
+      "pins": [
+        {
+          "number": "1",
+          "name": "",
+          "electrical": "power_in",
+          "shape": "line",
+          "at": [
+            2000.0,
+            1800.0
+          ],
+          "end": [
+            2000.0,
+            1800.0
+          ],
+          "dir": [
+            0.0,
+            -1.0
+          ],
+          "length_mil": 0.0,
+          "hide": false,
+          "name_hidden": true,
+          "number_hidden": true,
+          "name_size_mil": 50.0,
+          "number_size_mil": 50.0,
+          "name_offset_mil": 0.0
+        }
+      ],
+      "texts": [
+        {
+          "text": "#PWR01",
+          "at": [
+            2000.0,
+            1950.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "reference"
+        },
+        {
+          "text": "+3V3",
+          "at": [
+            2000.0,
+            1660.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": false,
+          "role": "value"
+        },
+        {
+          "text": "",
+          "at": [
+            2000.0,
+            1800.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "footprint"
+        },
+        {
+          "text": "",
+          "at": [
+            2000.0,
+            1800.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "datasheet"
+        }
+      ],
+      "bbox": [
+        [
+          1970.0,
+          1700.0
+        ],
+        [
+          2030.0,
+          1800.0
+        ]
+      ],
+      "unresolved": false
+    },
+    {
+      "reference": "R1",
+      "value": "1k",
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000002",
+      "lib_id": "Device:R",
+      "unit": 1,
+      "dnp": false,
+      "is_power": false,
+      "at": [
+        2000.0,
+        2000.0
+      ],
+      "rotation": 0.0,
+      "mirror": "none",
+      "shapes": [
+        {
+          "kind": "rectangle",
+          "a": [
+            1960.0,
+            2100.0
+          ],
+          "b": [
+            2040.0,
+            1900.0
+          ],
+          "stroke": {
+            "width_mil": 10.0,
+            "style": "default"
+          },
+          "fill": "none"
+        }
+      ],
+      "pins": [
+        {
+          "number": "1",
+          "name": "",
+          "electrical": "passive",
+          "shape": "line",
+          "at": [
+            2000.0,
+            1850.0
+          ],
+          "end": [
+            2000.0,
+            1900.0
+          ],
+          "dir": [
+            0.0,
+            1.0
+          ],
+          "length_mil": 50.0,
+          "hide": false,
+          "name_hidden": false,
+          "number_hidden": true,
+          "name_size_mil": 50.0,
+          "number_size_mil": 50.0,
+          "name_offset_mil": 0.0
+        },
+        {
+          "number": "2",
+          "name": "",
+          "electrical": "passive",
+          "shape": "line",
+          "at": [
+            2000.0,
+            2150.0
+          ],
+          "end": [
+            2000.0,
+            2100.0
+          ],
+          "dir": [
+            0.0,
+            -1.0
+          ],
+          "length_mil": 50.0,
+          "hide": false,
+          "name_hidden": false,
+          "number_hidden": true,
+          "name_size_mil": 50.0,
+          "number_size_mil": 50.0,
+          "name_offset_mil": 0.0
+        }
+      ],
+      "texts": [
+        {
+          "text": "R1",
+          "at": [
+            2000.0,
+            1881.89
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": false,
+          "role": "reference"
+        },
+        {
+          "text": "1k",
+          "at": [
+            2000.0,
+            2118.11
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": false,
+          "role": "value"
+        },
+        {
+          "text": "",
+          "at": [
+            2000.0,
+            2000.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "footprint"
+        },
+        {
+          "text": "",
+          "at": [
+            2000.0,
+            2000.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "datasheet"
+        }
+      ],
+      "bbox": [
+        [
+          1960.0,
+          1850.0
+        ],
+        [
+          2040.0,
+          2150.0
+        ]
+      ],
+      "unresolved": false
+    },
+    {
+      "reference": "R2",
+      "value": "2k",
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000006",
+      "lib_id": "Device:R",
+      "unit": 1,
+      "dnp": false,
+      "is_power": false,
+      "at": [
+        3500.0,
+        2600.0
+      ],
+      "rotation": 0.0,
+      "mirror": "none",
+      "shapes": [
+        {
+          "kind": "rectangle",
+          "a": [
+            3460.0,
+            2700.0
+          ],
+          "b": [
+            3540.0,
+            2500.0
+          ],
+          "stroke": {
+            "width_mil": 10.0,
+            "style": "default"
+          },
+          "fill": "none"
+        }
+      ],
+      "pins": [
+        {
+          "number": "1",
+          "name": "",
+          "electrical": "passive",
+          "shape": "line",
+          "at": [
+            3500.0,
+            2450.0
+          ],
+          "end": [
+            3500.0,
+            2500.0
+          ],
+          "dir": [
+            0.0,
+            1.0
+          ],
+          "length_mil": 50.0,
+          "hide": false,
+          "name_hidden": false,
+          "number_hidden": true,
+          "name_size_mil": 50.0,
+          "number_size_mil": 50.0,
+          "name_offset_mil": 0.0
+        },
+        {
+          "number": "2",
+          "name": "",
+          "electrical": "passive",
+          "shape": "line",
+          "at": [
+            3500.0,
+            2750.0
+          ],
+          "end": [
+            3500.0,
+            2700.0
+          ],
+          "dir": [
+            0.0,
+            -1.0
+          ],
+          "length_mil": 50.0,
+          "hide": false,
+          "name_hidden": false,
+          "number_hidden": true,
+          "name_size_mil": 50.0,
+          "number_size_mil": 50.0,
+          "name_offset_mil": 0.0
+        }
+      ],
+      "texts": [
+        {
+          "text": "R2",
+          "at": [
+            3500.0,
+            2481.89
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": false,
+          "role": "reference"
+        },
+        {
+          "text": "2k",
+          "at": [
+            3500.0,
+            2718.11
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": false,
+          "role": "value"
+        },
+        {
+          "text": "",
+          "at": [
+            3500.0,
+            2600.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "footprint"
+        },
+        {
+          "text": "",
+          "at": [
+            3500.0,
+            2600.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "datasheet"
+        }
+      ],
+      "bbox": [
+        [
+          3460.0,
+          2450.0
+        ],
+        [
+          3540.0,
+          2750.0
+        ]
+      ],
+      "unresolved": false
+    },
+    {
+      "reference": "#PWR02",
+      "value": "GND",
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000009",
+      "lib_id": "power:GND",
+      "unit": 1,
+      "dnp": false,
+      "is_power": true,
+      "at": [
+        3500.0,
+        2850.0
+      ],
+      "rotation": 0.0,
+      "mirror": "none",
+      "shapes": [
+        {
+          "kind": "polyline",
+          "pts": [
+            [
+              3500.0,
+              2850.0
+            ],
+            [
+              3500.0,
+              2900.0
+            ],
+            [
+              3550.0,
+              2900.0
+            ],
+            [
+              3500.0,
+              2950.0
+            ],
+            [
+              3450.0,
+              2900.0
+            ],
+            [
+              3500.0,
+              2900.0
+            ]
+          ],
+          "stroke": {
+            "width_mil": 0.0,
+            "style": "default"
+          },
+          "fill": "none"
+        }
+      ],
+      "pins": [
+        {
+          "number": "1",
+          "name": "",
+          "electrical": "power_in",
+          "shape": "line",
+          "at": [
+            3500.0,
+            2850.0
+          ],
+          "end": [
+            3500.0,
+            2850.0
+          ],
+          "dir": [
+            0.0,
+            1.0
+          ],
+          "length_mil": 0.0,
+          "hide": false,
+          "name_hidden": true,
+          "number_hidden": true,
+          "name_size_mil": 50.0,
+          "number_size_mil": 50.0,
+          "name_offset_mil": 0.0
+        }
+      ],
+      "texts": [
+        {
+          "text": "#PWR02",
+          "at": [
+            3500.0,
+            3100.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "reference"
+        },
+        {
+          "text": "GND",
+          "at": [
+            3500.0,
+            3000.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": false,
+          "role": "value"
+        },
+        {
+          "text": "",
+          "at": [
+            3500.0,
+            2850.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "footprint"
+        },
+        {
+          "text": "",
+          "at": [
+            3500.0,
+            2850.0
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "center",
+          "justify_v": "center",
+          "bold": false,
+          "italic": false,
+          "hide": true,
+          "role": "datasheet"
+        }
+      ],
+      "bbox": [
+        [
+          3450.0,
+          2850.0
+        ],
+        [
+          3550.0,
+          2950.0
+        ]
+      ],
+      "unresolved": false
+    }
+  ],
+  "wires": [
+    {
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000003",
+      "a": [
+        2000.0,
+        1800.0
+      ],
+      "b": [
+        2000.0,
+        1850.0
+      ],
+      "is_bus": false,
+      "stroke": {
+        "width_mil": 0.0,
+        "style": "default"
+      }
+    },
+    {
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000004",
+      "a": [
+        2000.0,
+        2150.0
+      ],
+      "b": [
+        2000.0,
+        2300.0
+      ],
+      "is_bus": false,
+      "stroke": {
+        "width_mil": 0.0,
+        "style": "default"
+      }
+    },
+    {
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000005",
+      "a": [
+        2000.0,
+        2300.0
+      ],
+      "b": [
+        2500.0,
+        2300.0
+      ],
+      "is_bus": false,
+      "stroke": {
+        "width_mil": 0.0,
+        "style": "default"
+      }
+    },
+    {
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000007",
+      "a": [
+        3000.0,
+        2500.0
+      ],
+      "b": [
+        3500.0,
+        2500.0
+      ],
+      "is_bus": false,
+      "stroke": {
+        "width_mil": 0.0,
+        "style": "default"
+      }
+    },
+    {
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000008",
+      "a": [
+        3500.0,
+        2500.0
+      ],
+      "b": [
+        3500.0,
+        2450.0
+      ],
+      "is_bus": false,
+      "stroke": {
+        "width_mil": 0.0,
+        "style": "default"
+      }
+    },
+    {
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000010",
+      "a": [
+        3500.0,
+        2750.0
+      ],
+      "b": [
+        3500.0,
+        2850.0
+      ],
+      "is_bus": false,
+      "stroke": {
+        "width_mil": 0.0,
+        "style": "default"
+      }
+    }
+  ],
+  "junctions": [],
+  "no_connects": [],
+  "bus_entries": [],
+  "labels": [
+    {
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000011",
+      "text": "GLB",
+      "kind": "global",
+      "shape": "input",
+      "at": [
+        2000.0,
+        2300.0
+      ],
+      "rotation": 180.0,
+      "size_mil": 50.0,
+      "justify_h": "right",
+      "justify_v": "bottom",
+      "bbox": [
+        [
+          1768.52,
+          2265.0
+        ],
+        [
+          2000.0,
+          2335.0
+        ]
+      ]
+    },
+    {
+      "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000012",
+      "text": "MIDROOT",
+      "kind": "local",
+      "shape": "passive",
+      "at": [
+        2200.0,
+        2300.0
+      ],
+      "rotation": 0.0,
+      "size_mil": 50.0,
+      "justify_h": "left",
+      "justify_v": "bottom",
+      "bbox": [
+        [
+          2200.0,
+          2230.0
+        ],
+        [
+          2554.81,
+          2300.0
+        ]
+      ]
+    }
+  ],
+  "sheets": [
+    {
+      "uuid": "33333333-3333-4333-8333-333333333333",
+      "name": "child",
+      "file": "hier_child.kicad_sch",
+      "at": [
+        2500.0,
+        2200.0
+      ],
+      "size": [
+        500.0,
+        400.0
+      ],
+      "stroke": {
+        "width_mil": 6.0,
+        "style": "solid"
+      },
+      "fill": "color",
+      "pins": [
+        {
+          "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000013",
+          "name": "VIN",
+          "shape": "input",
+          "at": [
+            2500.0,
+            2300.0
+          ],
+          "rotation": 180.0,
+          "side": "left",
+          "size_mil": 50.0
+        },
+        {
+          "uuid": "aaaaaaaa-aaaa-4aaa-8aaa-000000000014",
+          "name": "OUT",
+          "shape": "output",
+          "at": [
+            3000.0,
+            2500.0
+          ],
+          "rotation": 0.0,
+          "side": "right",
+          "size_mil": 50.0
+        }
+      ],
+      "texts": [
+        {
+          "text": "child",
+          "at": [
+            2500.0,
+            2171.98
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "left",
+          "justify_v": "bottom",
+          "bold": false,
+          "italic": false,
+          "hide": false,
+          "role": "sheet_name"
+        },
+        {
+          "text": "hier_child.kicad_sch",
+          "at": [
+            2500.0,
+            2623.02
+          ],
+          "rotation": 0.0,
+          "size_mil": 50.0,
+          "justify_h": "left",
+          "justify_v": "top",
+          "bold": false,
+          "italic": false,
+          "hide": false,
+          "role": "sheet_file"
+        }
+      ],
+      "bbox": [
+        [
+          2500.0,
+          2200.0
+        ],
+        [
+          3000.0,
+          2600.0
+        ]
+      ]
+    }
+  ],
+  "texts": [],
+  "text_boxes": [],
+  "graphics": [],
+  "images": [],
+  "bbox": [
+    [
+      1768.52,
+      1700.0
+    ],
+    [
+      3550.0,
+      2950.0
+    ]
+  ]
+}

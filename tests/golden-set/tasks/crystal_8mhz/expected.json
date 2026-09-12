@@ -1,0 +1,28 @@
+{
+  "anchored_nets": {
+    "GND": [
+      "Device:C|1.2e-11|#*",
+      "Device:C|1.2e-11|#*"
+    ],
+    "XIN": [
+      "Device:Crystal|8mhz|#*",
+      "Device:C|1.2e-11|#*"
+    ],
+    "XOUT": [
+      "Device:Crystal|8mhz|#*",
+      "Device:C|1.2e-11|#*"
+    ]
+  },
+  "anchors": [
+    "GND",
+    "XIN",
+    "XOUT"
+  ],
+  "components": {
+    "Device:Crystal|8mhz|": 1,
+    "Device:C|1.2e-11|": 2
+  },
+  "nets": [],
+  "schema_version": 1,
+  "task": "crystal_8mhz"
+}

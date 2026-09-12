@@ -1,0 +1,23 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "place_crystal",
+   "x_mil": 3000,
+   "y_mil": 3000,
+   "in_net": "XIN",
+   "out_net": "XOUT",
+   "designators": [
+    "Y1",
+    "C1",
+    "C2"
+   ],
+   "value": "8MHz",
+   "load_c": "12p"
+  },
+  {
+   "op": "place_pwr_flag",
+   "at": "C1.2"
+  }
+ ]
+}

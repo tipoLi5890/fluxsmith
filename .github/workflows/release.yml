@@ -1,0 +1,252 @@
+# Packages the double-clickable installers for macOS and Windows.
+#
+#   push a tag v<semver>  -> builds all three bundles and opens a DRAFT prerelease with them
+#                            attached. Nothing is public until you press Publish.
+#   workflow_dispatch     -> builds the same bundles and leaves them as workflow artifacts
+#                            (14 days), creating no release. Use this to rehearse.
+#
+# Artifact names and the SHA256SUMS convention follow docs/release-process.md section 4.
+# GitHub-hosted runners only: a release must never build on the self-hosted runner.
+#
+# The bundles are UNSIGNED. Gatekeeper and SmartScreen will stop them on first launch; that is
+# expected and documented, and the release notes say how to get past it. A Developer ID identity
+# and Windows signing would be plugged in at the marked step below.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Ten seconds of checks before twenty minutes of compiling.
+  preflight:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      is_tag: ${{ steps.check.outputs.is_tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: check
+        shell: bash
+        run: |
+          set -euo pipefail
+          pkg=$(node -p "require('./package.json').version")
+          conf=$(node -p "require('./src-tauri/tauri.conf.json').version")
+          crate=$(grep -m1 '^version' Cargo.toml | sed -E 's/.*"(.*)".*/\1/')
+          echo "package.json=$pkg  tauri.conf.json=$conf  Cargo.toml=$crate"
+          if [ "$pkg" != "$conf" ] || [ "$pkg" != "$crate" ]; then
+            echo "::error::version mismatch - package.json=$pkg tauri.conf.json=$conf Cargo.toml=$crate"
+            exit 1
+          fi
+          echo "version=$pkg" >> "$GITHUB_OUTPUT"
+
+          if [ "${GITHUB_REF_TYPE:-}" = "tag" ]; then
+            echo "is_tag=true" >> "$GITHUB_OUTPUT"
+            tag="${GITHUB_REF_NAME#v}"
+            if [ "$tag" != "$pkg" ]; then
+              echo "::error::tag ${GITHUB_REF_NAME} does not match version $pkg"
+              exit 1
+            fi
+            if ! grep -qE "^## \[${pkg//./\\.}\]" CHANGELOG.md; then
+              echo "::error::CHANGELOG.md has no '## [$pkg] - <date>' section. Release checklist step 10: move the [Unreleased] entries down under that heading and date them before tagging."
+              exit 1
+            fi
+          else
+            echo "is_tag=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  macos:
+    needs: preflight
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      # rustup is preinstalled; the first cargo call installs the toolchain rust-toolchain.toml pins,
+      # and `target add` then applies to that same toolchain rather than to whatever stable is.
+      - run: cargo --version
+      - run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+      - uses: pnpm/action-setup@v4
+        with: { version: 11 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+
+      # Two separate bundles rather than one universal binary, per release-process.md section 4.
+      # `pnpm tauri build` runs `pnpm build` first, so every lint and the typecheck gate the release.
+      # To sign, set APPLE_SIGNING_IDENTITY (plus APPLE_CERTIFICATE / APPLE_CERTIFICATE_PASSWORD, and
+      # APPLE_ID / APPLE_PASSWORD / APPLE_TEAM_ID to notarize) on these two steps.
+      - run: pnpm tauri build --target aarch64-apple-darwin
+      - run: pnpm tauri build --target x86_64-apple-darwin
+
+      - name: Collect
+        shell: bash
+        run: |
+          set -euo pipefail
+          v="${{ needs.preflight.outputs.version }}"
+          mkdir -p dist-release
+          for pair in "aarch64-apple-darwin:arm64" "x86_64-apple-darwin:x64"; do
+            triple="${pair%%:*}"; arch="${pair##*:}"
+            dmg=$(find "target/$triple/release/bundle/dmg" -name '*.dmg' -print -quit)
+            if [ -z "$dmg" ]; then echo "::error::no .dmg produced for $triple"; exit 1; fi
+            cp "$dmg" "dist-release/fluxsmith-$v-macos-$arch.dmg"
+          done
+          ls -lh dist-release
+          {
+            echo "### macOS bundles"
+            echo
+            echo "| file | size |"
+            echo "|---|---|"
+            for f in dist-release/*; do
+              echo "| \`$(basename "$f")\` | $(du -h "$f" | cut -f1) |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bundle-macos
+          path: dist-release/*
+          retention-days: 14
+          if-no-files-found: error
+
+  windows:
+    needs: preflight
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo --version
+      - uses: pnpm/action-setup@v4
+        with: { version: 11 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+
+      # NSIS, installMode currentUser: no administrator prompt, and the WebView2 bootstrapper is
+      # fetched by the installer when the runtime is missing (Windows 10).
+      # To sign, set the certificate through tauri.conf.json bundle.windows.certificateThumbprint
+      # or a signing service, and provide it to this step as a secret.
+      - run: pnpm tauri build
+
+      - name: Collect
+        shell: bash
+        run: |
+          set -euo pipefail
+          v="${{ needs.preflight.outputs.version }}"
+          mkdir -p dist-release
+          exe=$(find target -path '*release/bundle/nsis/*-setup.exe' -print -quit)
+          if [ -z "$exe" ]; then echo "::error::no NSIS installer produced"; exit 1; fi
+          cp "$exe" "dist-release/fluxsmith-$v-windows-x64-setup.exe"
+          ls -lh dist-release
+          {
+            echo "### Windows bundle"
+            echo
+            echo "| file | size |"
+            echo "|---|---|"
+            for f in dist-release/*; do
+              echo "| \`$(basename "$f")\` | $(du -h "$f" | cut -f1) |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bundle-windows
+          path: dist-release/*
+          retention-days: 14
+          if-no-files-found: error
+
+  draft-release:
+    needs: [preflight, macos, windows]
+    if: needs.preflight.outputs.is_tag == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: staging
+          pattern: bundle-*
+          merge-multiple: true
+
+      - name: Checksums and release notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          v="${{ needs.preflight.outputs.version }}"
+          ( cd staging && sha256sum -- * > SHA256SUMS && cat SHA256SUMS )
+
+          # The CHANGELOG section for this version, verified to exist by preflight.
+          awk -v ver="[$v]" '
+            index($0, "## " ver) == 1 { on = 1; next }
+            on && /^## / { exit }
+            on { print }
+          ' CHANGELOG.md > "staging/CHANGELOG-$v.md"
+
+          {
+            echo "Experimental research project. No stability guarantees, and the schematics it"
+            echo "writes have not been reviewed by anyone - read the README before pointing it at"
+            echo "work you care about, and keep that work in version control."
+            echo
+            echo "## Install"
+            echo
+            echo "| Platform | File |"
+            echo "|---|---|"
+            echo "| macOS (Apple silicon) | \`fluxsmith-$v-macos-arm64.dmg\` |"
+            echo "| macOS (Intel) | \`fluxsmith-$v-macos-x64.dmg\` |"
+            echo "| Windows 10/11 (x64) | \`fluxsmith-$v-windows-x64-setup.exe\` |"
+            echo
+            echo "**KiCad 10 must be installed separately.** Without it fluxsmith starts, reports an"
+            echo "incomplete environment and keeps the AI features disabled."
+            echo
+            echo "These bundles are unsigned, so the first launch is blocked. This is expected;"
+            echo "fluxsmith does nothing to work around it on your behalf."
+            echo
+            echo "- **macOS** - open the .dmg, drag fluxsmith to Applications, launch it once, then"
+            echo "  allow it under System Settings > Privacy & Security > Open Anyway."
+            echo "- **Windows** - run the installer and choose More info > Run anyway. It installs"
+            echo "  for the current user, so no administrator prompt appears."
+            echo
+            echo "Verify a download against \`SHA256SUMS\` before running it:"
+            echo '```sh'
+            echo "shasum -a 256 -c SHA256SUMS --ignore-missing   # macOS"
+            echo "sha256sum     -c SHA256SUMS --ignore-missing   # elsewhere"
+            echo '```'
+            echo
+            echo "## Changes"
+            echo
+            # The release body is capped at 125,000 characters. The full section ships as an
+            # attached file either way, so a long one is trimmed rather than failing the release.
+            if [ "$(wc -c < "staging/CHANGELOG-$v.md")" -gt 90000 ]; then
+              head -c 90000 "staging/CHANGELOG-$v.md"
+              echo
+              echo "_Trimmed. The full entry is attached as \`CHANGELOG-$v.md\`._"
+            else
+              cat "staging/CHANGELOG-$v.md"
+            fi
+          } > notes.md
+          echo "release body: $(wc -c < notes.md) bytes"
+          cat notes.md
+
+      - name: Open a draft prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          v="${{ needs.preflight.outputs.version }}"
+          gh release create "${GITHUB_REF_NAME}" \
+            --draft --prerelease \
+            --title "fluxsmith $v" \
+            --notes-file notes.md \
+            staging/*
+          echo "Draft release created. Review and publish it by hand:" >> "$GITHUB_STEP_SUMMARY"
+          echo "${{ github.server_url }}/${{ github.repository }}/releases" >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,125 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "00001200-0000-4000-8000-000000001200")
+	(paper "A4")
+	(lib_symbols
+		(symbol "Custom:OPA2V"
+			(pin_names (offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "A" (at 0 6.35 0) (effects (font (size 1.27 1.27))))
+			(property "Value" "OPA2V" (at 0 -6.35 0) (effects (font (size 1.27 1.27))))
+			(property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(symbol "OPA2V_0_1"
+				(pin power_in line
+					(at 0 7.62 270)
+					(length 3.81)
+					(name "V+" (effects (font (size 1.27 1.27))))
+					(number "8" (effects (font (size 1.27 1.27))))
+				)
+				(pin power_in line
+					(at 0 -7.62 90)
+					(length 3.81)
+					(name "V-" (effects (font (size 1.27 1.27))))
+					(number "4" (effects (font (size 1.27 1.27))))
+				)
+			)
+			(symbol "OPA2V_1_1"
+				(polyline (pts (xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08)) (stroke (width 0.254) (type default)) (fill (type none)))
+				(pin output line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name "OUT" (effects (font (size 1.27 1.27))))
+					(number "1" (effects (font (size 1.27 1.27))))
+				)
+				(pin input line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "INN" (effects (font (size 1.27 1.27))))
+					(number "2" (effects (font (size 1.27 1.27))))
+				)
+				(pin input line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "INP" (effects (font (size 1.27 1.27))))
+					(number "3" (effects (font (size 1.27 1.27))))
+				)
+			)
+			(symbol "OPA2V_2_1"
+				(polyline (pts (xy -5.08 5.08) (xy 5.08 0) (xy -5.08 -5.08) (xy -5.08 5.08)) (stroke (width 0.254) (type default)) (fill (type none)))
+				(pin output line
+					(at 7.62 0 180)
+					(length 2.54)
+					(name "OUT" (effects (font (size 1.27 1.27))))
+					(number "7" (effects (font (size 1.27 1.27))))
+				)
+				(pin input line
+					(at -7.62 -2.54 0)
+					(length 2.54)
+					(name "INN" (effects (font (size 1.27 1.27))))
+					(number "6" (effects (font (size 1.27 1.27))))
+				)
+				(pin input line
+					(at -7.62 2.54 0)
+					(length 2.54)
+					(name "INP" (effects (font (size 1.27 1.27))))
+					(number "5" (effects (font (size 1.27 1.27))))
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Custom:OPA2V")
+		(at 40 60 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00001201-0000-4000-8000-000000001201")
+		(property "Reference" "A1" (at 40 57 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "OPA2V" (at 40 63 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 40 60 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "" (at 40 60 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(instances
+			(project "common0"
+				(path "/00001200-0000-4000-8000-000000001200"
+					(reference "A1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Custom:OPA2V")
+		(at 80 60 0)
+		(unit 2)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00001202-0000-4000-8000-000000001202")
+		(property "Reference" "A1" (at 80 57 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "OPA2V" (at 80 63 0) (effects (font (size 1.27 1.27))))
+		(property "Footprint" "" (at 80 60 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Datasheet" "" (at 80 60 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(instances
+			(project "common0"
+				(path "/00001200-0000-4000-8000-000000001200"
+					(reference "A1")
+					(unit 2)
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

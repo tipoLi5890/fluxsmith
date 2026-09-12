@@ -1,0 +1,19 @@
+/* AI models tab: collapsed provider list, inline panels, dashed add buttons. Colours via tokens only. */
+.prov-list { display: flex; flex-direction: column; gap: var(--space-2); }
+.prov-item { border: 1px solid var(--gray-400); border-radius: var(--radius-2); background: var(--bg-1); }
+.prov-row { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-2) var(--space-3); min-height: 44px; }
+.prov-name { font-weight: 500; }
+.prov-dot { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; background: var(--gray-600); }
+.prov-dot-ok { background: var(--green-500); }
+.prov-dot-warn { background: var(--amber-500); }
+.prov-dot-off { background: var(--gray-600); }
+.prov-delete { color: var(--red-900); }
+.prov-panel { border-top: 1px solid var(--gray-400); padding: var(--space-3); background: var(--bg-2); border-radius: 0 0 var(--radius-2) var(--radius-2); }
+.prov-panel-foot { padding-top: var(--space-2); }
+.prov-collapse { display: inline-flex; align-items: center; gap: 4px; background: transparent; border: 0; color: var(--gray-1000); padding: 4px 0; cursor: pointer; font: inherit; }
+.prov-advanced { padding-left: var(--space-3); border-left: 1px solid var(--gray-400); }
+.prov-chips { min-height: 28px; }
+.prov-add-row { display: flex; gap: var(--space-2); }
+.prov-add { flex: 1 1 0; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; border: 1px dashed var(--gray-500); border-radius: var(--radius-2); background: transparent; color: var(--gray-1000); cursor: pointer; font: inherit; }
+.prov-add:hover { border-color: var(--gray-700); background: var(--bg-2); }
+.prov-add:focus-visible { outline: var(--focus-ring); outline-offset: 2px; }

@@ -1,0 +1,25 @@
+{
+  "anchored_nets": {
+    "+3V3": [
+      "Device:R|4.7e3|#*",
+      "Device:R|4.7e3|#*"
+    ],
+    "SCL": [
+      "Device:R|4.7e3|#*"
+    ],
+    "SDA": [
+      "Device:R|4.7e3|#*"
+    ]
+  },
+  "anchors": [
+    "+3V3",
+    "SCL",
+    "SDA"
+  ],
+  "components": {
+    "Device:R|4.7e3|": 2
+  },
+  "nets": [],
+  "schema_version": 1,
+  "task": "i2c_pullups"
+}

@@ -1,0 +1,6 @@
+{
+  "erc_allowed_types": [
+    "power_pin_not_driven"
+  ],
+  "reason": "A standalone block: the +3V3 the pull-ups return to is fed from outside the drawing, so KiCad reports the rail's power_in pin as undriven by construction. The agent must not assert a source it cannot see (PWR_FLAG is the engineer's call on a supply rail); the task text does not ask for one."
+}

@@ -1,0 +1,116 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches: [main]
+    # A release tag runs the full suite too, so the tag commit carries its own check status
+    # (ci.md section 5: a release tag runs every PR job). Packaging lives in release.yml.
+    tags: ["v*"]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 18 * * *" # nightly
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  lint:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with: { components: "clippy, rustfmt" }
+      - uses: pnpm/action-setup@v4
+        with: { version: 11 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: pnpm exec tsc --noEmit
+      - run: pnpm lint:emoji
+      - run: pnpm lint:design
+      - run: pnpm lint:cache
+
+  unit:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: pnpm/action-setup@v4
+        with: { version: 11 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: cargo test --workspace --exclude fluxsmith-app
+      - run: cargo test -p fluxsmith-app --lib
+      - run: pnpm test
+
+  conformance:
+    # Needs a real KiCad (tests/conformance/env.toml), so it can only run on a self-hosted
+    # runner. Two guards, both deliberate:
+    #
+    #   vars.SELF_HOSTED_RUNNER - unset until a runner with the [self-hosted, macOS, kicad]
+    #     labels is actually registered. Without it this job would queue with nothing to pick
+    #     it up and then fail, on every push and every nightly. Set the repository variable to
+    #     'true' once a runner exists; until then the parity gate is NOT running, which is a
+    #     known gap rather than a passing check.
+    #   head.repo == this repo - a self-hosted runner on a public repository must never
+    #     execute code from a fork. Everything else that reaches here is push-to-main,
+    #     schedule or a manual dispatch, all of which already require write access.
+    #
+    # Do not loosen either one.
+    if: >-
+      vars.SELF_HOSTED_RUNNER == 'true' &&
+      (github.event_name != 'pull_request' ||
+       (github.event.pull_request.head.repo.full_name == github.repository &&
+        contains(github.event.pull_request.title, '[engine]')))
+    runs-on: [self-hosted, macOS, kicad]
+    steps:
+      - uses: actions/checkout@v4
+      - run: cargo test --workspace --exclude fluxsmith-app -- --include-ignored oracle
+      - run: tests/golden-set/build.sh
+
+  golden-nightly:
+    # Real-model golden subset on the self-hosted runner (needs a configured provider + KiCad).
+    # Schedule and manual dispatch only, so it never runs for a fork. Cost-capped and never
+    # blocking: the criteria are read from the uploaded run JSON, not from the job status.
+    if: >-
+      vars.SELF_HOSTED_RUNNER == 'true' &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    runs-on: [self-hosted, macOS, kicad]
+    continue-on-error: true
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install --frozen-lockfile
+      - run: cargo build -p fluxsmith-cli
+      - run: pnpm tauri build --debug --no-bundle
+      - run: pnpm golden:run --subset nightly --n 1 --budget-usd 5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: golden-nightly-${{ github.run_id }}
+          path: tests/golden-set/runs/*.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: pnpm/action-setup@v4
+        with: { version: 11 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm tauri build --debug --no-bundle

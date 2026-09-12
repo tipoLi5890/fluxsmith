@@ -1,0 +1,44 @@
+$ node scripts/golden-run.mjs --tasks power_subsheet,ldo_3v3,header_4pin,crystal_8mhz --n 3 --budget-usd 20
+[golden] power_subsheet #1/3 ...
+[golden] power_subsheet #1: ok=true score=1.00 erc=4/0 cards=0 skipped=0 tokens=68283 usd=0.048 57s
+[golden] power_subsheet #2/3 ...
+[golden] power_subsheet #2: ok=true score=1.00 erc=4/0 cards=2 skipped=0 tokens=212183 usd=0.137 111s
+[golden] power_subsheet #3/3 ...
+[golden] power_subsheet #3: timed out; subagent transcripts: <tmpdir>/fluxsmith-golden-mKXKrE/power_subsheet-2/.fluxsmith/turns/<n>/subagents/
+[golden] power_subsheet #3: ok=true score=1.00 erc=0/0 cards=2 skipped=0 tokens=34775 usd=0.030 1568s
+[golden] ldo_3v3 #1/3 ...
+[golden] ldo_3v3 #1: ok=true score=1.00 erc=0/0 cards=1 skipped=0 tokens=526048 usd=0.386 255s
+[golden] ldo_3v3 #2/3 ...
+[golden] ldo_3v3 #2: ok=true score=1.00 erc=0/0 cards=0 skipped=0 tokens=171547 usd=0.156 111s
+[golden] ldo_3v3 #3/3 ...
+[golden] ldo_3v3 #3: ok=true score=1.00 erc=0/0 cards=0 skipped=0 tokens=167118 usd=0.162 123s
+[golden] header_4pin #1/3 ...
+[golden] header_4pin #1: ok=false score=0.00 erc=2/2 cards=0 skipped=0 tokens=155397 usd=0.120 91s
+[golden] header_4pin #2/3 ...
+[golden] header_4pin #2: ok=true score=1.00 erc=2/2 cards=0 skipped=0 tokens=199920 usd=0.150 101s
+[golden] header_4pin #3/3 ...
+[golden] header_4pin #3: ok=true score=1.00 erc=0/2 cards=0 skipped=0 tokens=368940 usd=0.292 185s
+[golden] crystal_8mhz #1/3 ...
+[golden] crystal_8mhz #1: ok=true score=1.00 erc=0/0 cards=0 skipped=0 tokens=295509 usd=0.257 195s
+[golden] crystal_8mhz #2/3 ...
+[golden] crystal_8mhz #2: ok=true score=1.00 erc=0/0 cards=0 skipped=0 tokens=147961 usd=0.111 75s
+[golden] crystal_8mhz #3/3 ...
+[golden] crystal_8mhz #3: ok=true score=1.00 erc=0/0 cards=0 skipped=0 tokens=168211 usd=0.115 79s
+# golden run 2026-08-30T16:39:30.904Z (model gpt-5.6-luna, weighted 0.917, total USD 1.964)
+
+abort line: weighted pass 0.92 (need >= 0.70), cards median/p90 0/2, hard stops 4 (need <= 15), 0/N tasks: none
+
+| task | pass | score | erc err/warn | cards med/p90 | hard stops | skipped | tokens | usd | time |
+|---|---|---|---|---|---|---|---|---|---|
+| power_subsheet | 3/3 | 1.00 | 8/0 | 2/2 | 3 | 0 | 315k | 0.215 | 1736s |
+| ldo_3v3 | 3/3 | 1.00 | 0/0 | 0/1 | 1 | 0 | 865k | 0.705 | 489s |
+| header_4pin | 2/3 | 0.67 | 4/6 | 0/0 | 0 | 0 | 724k | 0.561 | 377s |
+| crystal_8mhz | 3/3 | 1.00 | 0/0 | 0/0 | 0 | 0 | 612k | 0.483 | 349s |
+
+timed out (subagent transcripts under <project>/.fluxsmith/turns/<n>/subagents/):
+- power_subsheet #3: <tmpdir>/fluxsmith-golden-mKXKrE/power_subsheet-2/.fluxsmith/turns
+
+- header_4pin: component Connector_Generic:Conn_01x04||: expected 1, found 0; unexpected component Connector:Conn_01x04_Pin|| x1; net D+: missing ["Connector_Generic:Conn_01x04||#2"], extra ["Connector:Conn_01x04_Pin||#2"]; net D-: missing ["Connector_Generic:Conn_01x04||#3"], extra ["Connector:Conn_01x04_Pin||#3"]
+
+written tests/golden-set/runs/2026-08-30T15-49-58-968Z.json
+projects kept under <tmpdir>/fluxsmith-golden-mKXKrE (delete when done)

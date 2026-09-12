@@ -1,0 +1,23 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "place_array",
+   "lib_id": "Device:R",
+   "designator_prefix": "R",
+   "count": 4,
+   "x_mil": 3000,
+   "y_mil": 3000,
+   "pitch_mil": 400,
+   "direction": "right",
+   "value": "10k",
+   "pin1_labels": [
+    "IN0",
+    "IN1",
+    "IN2",
+    "IN3"
+   ],
+   "pin2_rail": "GND"
+  }
+ ]
+}

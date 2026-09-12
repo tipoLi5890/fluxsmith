@@ -1,0 +1,21 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "place_led_indicator",
+   "x_mil": 3000,
+   "y_mil": 3000,
+   "net": "LED_CTRL",
+   "designators": [
+    "R1",
+    "D1"
+   ],
+   "r_value": "1k",
+   "gnd_net": "GND"
+  },
+  {
+   "op": "place_pwr_flag",
+   "at": "D1.1"
+  }
+ ]
+}

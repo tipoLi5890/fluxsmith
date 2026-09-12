@@ -1,0 +1,22 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "place_divider",
+   "x_mil": 3000,
+   "y_mil": 3000,
+   "top_net": "VBUS",
+   "mid_net": "VSENSE",
+   "bottom_net": "GND",
+   "designators": [
+    "R1",
+    "R2"
+   ],
+   "values": [
+    "100k",
+    "27k"
+   ],
+   "spacing_mil": 400
+  }
+ ]
+}

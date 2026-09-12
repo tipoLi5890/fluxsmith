@@ -1,0 +1,27 @@
+# Byte-identical round-trips of `.kicad_sch` are red line 2, and the conformance
+# suite compares bytes. Git must therefore never rewrite a line ending: every
+# text file is LF in the repository and LF on checkout, on every platform,
+# whatever a contributor's `core.autocrlf` happens to be. Without this, a
+# Windows clone (Git for Windows defaults to autocrlf=true) converts all 37
+# tracked KiCad files to CRLF and every round-trip test fails.
+* text=auto eol=lf
+
+# Design files and fixtures stay text so they remain diffable, but pinned to LF.
+*.kicad_sch text eol=lf
+*.kicad_sym text eol=lf
+*.kicad_pro text eol=lf
+*.kicad_prl text eol=lf
+
+# Never transformed, never diffed as text.
+*.png    binary
+*.ico    binary
+*.icns   binary
+*.woff2  binary
+*.pdf    binary
+*.bundle binary
+
+# Collapsed in reviews and excluded from language stats.
+Cargo.lock                              linguist-generated
+pnpm-lock.yaml                          linguist-generated
+fuzz/Cargo.lock                         linguist-generated
+src/agent/models/catalog.generated.json linguist-generated

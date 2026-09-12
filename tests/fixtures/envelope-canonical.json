@@ -1,0 +1,49 @@
+{
+  "_comment": "Shared fixture for the canonical turn-envelope serialisation a `scope` grant is bound to. Both sides (fourteen fields, including properties_changed_max / components_moved_max / refs_editable) must produce `canonical_json` byte for byte and the same sha256 over it: TypeScript canonicalEnvelope/envelopeSha (src/agent/util.ts), Rust Envelope::canonical_json/canonical_sha256 (src-tauri/src/ipc.rs).",
+  "envelope": {
+    "sheets": [
+      "power.kicad_sch",
+      "sub/analog.kicad_sch"
+    ],
+    "allowed_ops": [
+      "place_component",
+      "add_wire"
+    ],
+    "components_added_max": 12,
+    "components_deleted_max": 0,
+    "wires_max": 40,
+    "structural": [
+      "create_sheet:power.kicad_sch",
+      "add_sheet:power.kicad_sch"
+    ],
+    "nets_renamable": [
+      "GLB"
+    ],
+    "rails": [
+      "+3V3",
+      "GND"
+    ],
+    "interfaces": [
+      "SDA",
+      "SCL"
+    ],
+    "instance_designators": {
+      "/power/": [
+        "C1",
+        "U2"
+      ],
+      "/": [
+        "R1"
+      ]
+    },
+    "source": "plan:p1@2/s3",
+    "properties_changed_max": 6,
+    "components_moved_max": 3,
+    "refs_editable": [
+      "R1",
+      "C1"
+    ]
+  },
+  "canonical_json": "{\"allowed_ops\":[\"place_component\",\"add_wire\"],\"components_added_max\":12,\"components_deleted_max\":0,\"components_moved_max\":3,\"instance_designators\":{\"/\":[\"R1\"],\"/power/\":[\"C1\",\"U2\"]},\"interfaces\":[\"SDA\",\"SCL\"],\"nets_renamable\":[\"GLB\"],\"properties_changed_max\":6,\"rails\":[\"+3V3\",\"GND\"],\"refs_editable\":[\"R1\",\"C1\"],\"sheets\":[\"power.kicad_sch\",\"sub/analog.kicad_sch\"],\"source\":\"plan:p1@2/s3\",\"structural\":[\"create_sheet:power.kicad_sch\",\"add_sheet:power.kicad_sch\"],\"wires_max\":40}",
+  "sha256": "03f2dc385bfcb4e00d065c95f3aaa2f341f0e7f8e46101db626632de783af0ae"
+}

@@ -1,0 +1,22 @@
+{
+  "anchored_nets": {
+    "+3V3": [
+      "Device:C|1.0000000000000001e-7|#*",
+      "Device:C|1.0000000000000001e-7|#*"
+    ],
+    "GND": [
+      "Device:C|1.0000000000000001e-7|#*",
+      "Device:C|1.0000000000000001e-7|#*"
+    ]
+  },
+  "anchors": [
+    "+3V3",
+    "GND"
+  ],
+  "components": {
+    "Device:C|1.0000000000000001e-7|": 2
+  },
+  "nets": [],
+  "schema_version": 1,
+  "task": "decoupling_3v3"
+}

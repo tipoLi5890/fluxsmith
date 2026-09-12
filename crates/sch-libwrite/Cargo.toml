@@ -1,0 +1,14 @@
+[package]
+name = "sch-libwrite"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Writer for .kicad_sym / .kicad_mod from a normalised part spec (Sourcer, M3)"
+
+[dependencies]
+kicad-sexpr = { path = "../kicad-sexpr" }
+sch-model = { path = "../sch-model" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }

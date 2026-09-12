@@ -1,0 +1,264 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "00000601-0000-4000-8000-000000000601")
+	(paper "A4")
+	(lib_symbols
+		(symbol "Device:R"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(effects (font (size 1.27 1.27)))
+			)
+			(property "Value" "R"
+				(at 0 0 90)
+				(effects (font (size 1.27 1.27)))
+			)
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(effects (font (size 1.27 1.27)) (hide yes))
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects (font (size 1.27 1.27)) (hide yes))
+			)
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke (width 0.254) (type default))
+					(fill (type none))
+				)
+			)
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "" (effects (font (size 1.27 1.27))))
+					(number "1" (effects (font (size 1.27 1.27))))
+				)
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "" (effects (font (size 1.27 1.27))))
+					(number "2" (effects (font (size 1.27 1.27))))
+				)
+			)
+		)
+		(symbol "power:VLOC"
+			(power local)
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 0)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "#PWR"
+				(at 0 -3.81 0)
+				(effects (font (size 1.27 1.27)) (hide yes))
+			)
+			(property "Value" "VLOC"
+				(at 0 3.556 0)
+				(effects (font (size 1.27 1.27)))
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects (font (size 1.27 1.27)) (hide yes))
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects (font (size 1.27 1.27)) (hide yes))
+			)
+			(symbol "VLOC_0_1"
+				(polyline
+					(pts (xy -0.762 1.27) (xy 0 2.54))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0 2.54) (xy 0.762 1.27))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+				(polyline
+					(pts (xy 0 0) (xy 0 2.54))
+					(stroke (width 0) (type default))
+					(fill (type none))
+				)
+			)
+			(symbol "VLOC_1_1"
+				(pin power_in line
+					(at 0 0 90)
+					(length 0)
+					(name "VLOC" (effects (font (size 1.27 1.27))))
+					(number "1" (effects (font (size 1.27 1.27))))
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 50.8 50.8 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00000611-0000-4000-8000-000000000611")
+		(property "Reference" "R1"
+			(at 50.8 47.8 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "1k"
+			(at 50.8 53.8 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" ""
+			(at 50.8 50.8 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 50.8 50.8 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(instances
+			(project "localprio"
+				(path "/00000600-0000-4000-8000-000000000600/00000602-0000-4000-8000-000000000602"
+					(reference "R1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts (xy 50.8 54.61) (xy 50.8 57.15))
+		(stroke (width 0) (type default))
+		(uuid "00000612-0000-4000-8000-000000000612")
+	)
+	(label "ZZZ"
+		(at 50.8 55.88 0)
+		(effects (font (size 1.27 1.27)) (justify left bottom))
+		(uuid "00000613-0000-4000-8000-000000000613")
+	)
+	(symbol
+		(lib_id "power:VLOC")
+		(at 50.8 57.15 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00000614-0000-4000-8000-000000000614")
+		(property "Reference" "#PWR03"
+			(at 50.8 54.15 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "VLOC"
+			(at 50.8 60.15 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" ""
+			(at 50.8 57.15 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 50.8 57.15 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(instances
+			(project "localprio"
+				(path "/00000600-0000-4000-8000-000000000600/00000602-0000-4000-8000-000000000602"
+					(reference "#PWR03")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 76.2 50.8 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00000615-0000-4000-8000-000000000615")
+		(property "Reference" "R2"
+			(at 76.2 47.8 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "2k"
+			(at 76.2 53.8 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" ""
+			(at 76.2 50.8 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 76.2 50.8 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(instances
+			(project "localprio"
+				(path "/00000600-0000-4000-8000-000000000600/00000602-0000-4000-8000-000000000602"
+					(reference "R2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(wire
+		(pts (xy 76.2 54.61) (xy 76.2 57.15))
+		(stroke (width 0) (type default))
+		(uuid "00000616-0000-4000-8000-000000000616")
+	)
+	(symbol
+		(lib_id "power:VLOC")
+		(at 76.2 57.15 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "00000617-0000-4000-8000-000000000617")
+		(property "Reference" "#PWR04"
+			(at 76.2 54.15 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "VLOC"
+			(at 76.2 60.15 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" ""
+			(at 76.2 57.15 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 76.2 57.15 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(instances
+			(project "localprio"
+				(path "/00000600-0000-4000-8000-000000000600/00000602-0000-4000-8000-000000000602"
+					(reference "#PWR04")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(embedded_fonts no)
+)

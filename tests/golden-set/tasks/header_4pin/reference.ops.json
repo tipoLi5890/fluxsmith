@@ -1,0 +1,33 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "place_component",
+   "lib_id": "Connector_Generic:Conn_01x04",
+   "designator": "J1",
+   "x_mil": 3000,
+   "y_mil": 3000
+  },
+  {
+   "op": "place_power_port",
+   "lib_id": "power:VBUS",
+   "net_name": "VBUS",
+   "at": "J1.1",
+   "rotation": 0
+  },
+  {
+   "op": "add_net_label",
+   "name": "D+",
+   "at": "J1.2"
+  },
+  {
+   "op": "add_net_label",
+   "name": "D-",
+   "at": "J1.3"
+  },
+  {
+   "op": "place_gnd",
+   "at": "J1.4"
+  }
+ ]
+}

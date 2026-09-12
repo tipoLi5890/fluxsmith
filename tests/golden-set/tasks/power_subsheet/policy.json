@@ -1,0 +1,7 @@
+{
+  "erc_allowed_types": [
+    "pin_not_connected",
+    "label_dangling"
+  ],
+  "reason": "A scaffold: an empty sub-sheet with VIN/VOUT pins has two unconnected sheet pins and two dangling hierarchical labels until the design fills it; KiCad reports exactly these two types by construction. Any other error still fails the task."
+}

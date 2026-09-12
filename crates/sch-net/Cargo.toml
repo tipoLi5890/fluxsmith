@@ -1,0 +1,19 @@
+[package]
+name = "sch-net"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+kicad-sexpr = { path = "../kicad-sexpr" }
+sch-model = { path = "../sch-model" }
+sch-read = { path = "../sch-read" }
+serde = { workspace = true }
+thiserror = { workspace = true }
+sha2 = { workspace = true }
+hex = "0.4"
+
+[dev-dependencies]
+tempfile = { workspace = true }
+serde_json = { workspace = true }

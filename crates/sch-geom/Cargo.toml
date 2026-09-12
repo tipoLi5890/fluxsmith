@@ -1,0 +1,18 @@
+[package]
+name = "sch-geom"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+kicad-sexpr = { path = "../kicad-sexpr" }
+sch-model = { path = "../sch-model" }
+sch-read = { path = "../sch-read" }
+sch-net = { path = "../sch-net" }
+sch-write = { path = "../sch-write" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }

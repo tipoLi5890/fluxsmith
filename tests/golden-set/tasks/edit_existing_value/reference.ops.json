@@ -1,0 +1,10 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "set_component_parameters",
+   "designator": "R1",
+   "value": "2k2"
+  }
+ ]
+}

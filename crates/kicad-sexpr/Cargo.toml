@@ -1,0 +1,10 @@
+[package]
+name = "kicad-sexpr"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Lossless S-expression reader/writer for KiCad files: byte-identical round-trip, unknown nodes preserved, explicit stack, hard limits."
+
+[dependencies]
+thiserror = { workspace = true }

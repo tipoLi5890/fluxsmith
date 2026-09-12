@@ -1,0 +1,27 @@
+fluxsmith
+Copyright 2026 The fluxsmith Authors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Third-party components:
+- Geist Sans / Geist Mono fonts — SIL Open Font License 1.1 (Reserved Font Name "Geist");
+  vendored unmodified in `src/styles/fonts/` (see LICENSE.txt there)
+- Lucide icons (`lucide-react`) — ISC License
+- pi-ai / pi-agent-core (`@mariozechner/*`) — MIT License (npm, exact pin)
+- Tauri, React, zustand, yaml — MIT / Apache-2.0 (npm / crates.io, see lockfiles)
+- SQLite (via `rusqlite` bundled) — public domain / MIT
+- The AI phase animation ("thinking orb") is fluxsmith's own implementation, inspired by
+  thinking-orbs (MIT, Copyright (c) 2026 Jakub Antalik); no code was copied.
+- The application icon is an original geometric mark for this project, drawn procedurally by
+  `scripts/make-app-icon.py`; it is not derived from any third-party artwork.
+- KiCanvas is not vendored (the canvas is drawn by fluxsmith from `sch-geom` geometry);
+  its drawing conventions were used as a reference only.
+- pdf-extract (crates.io) — MIT License; arboard (crates.io) — MIT / Apache-2.0; rfd (crates.io) — MIT;
+  sys-locale (crates.io) — MIT / Apache-2.0; nanohtml2text (crates.io) — MIT License
+- JLC2KiCadLib (Copyright (c) TousstNicolas) — MIT License; design reference only for the
+  EasyEDA/LCSC CAD → KiCad conversion rules re-implemented in Rust in `crates/easyeda-convert`
+  (no code copied, no Python at runtime, no GPL KicadModTree)
+- jlcsearch (tscircuit) — MIT License; used as the JLCPCB parts-search HTTP service
+  (`jlcsearch.tscircuit.com`), not vendored; jlcparts (Jan Mrázek) — MIT License, catalogue
+  field reference only
+Each retains its own license and copyright notice.

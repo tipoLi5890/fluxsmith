@@ -1,0 +1,6 @@
+{
+  "erc_allowed_types": [
+    "power_pin_not_driven"
+  ],
+  "reason": "A standalone block: the +3V3 rail is fed from outside the drawing, so KiCad reports its power_in pin as undriven by construction. A PWR_FLAG on a supply rail is the engineer's assertion; the agent only places it when the task names the source or the schematic shows one."
+}

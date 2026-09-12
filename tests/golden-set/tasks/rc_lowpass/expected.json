@@ -1,0 +1,26 @@
+{
+  "anchored_nets": {
+    "GND": [
+      "Device:C|1.0000000000000001e-7|#*"
+    ],
+    "IN": [
+      "Device:R|1e3|#*"
+    ],
+    "OUT": [
+      "Device:C|1.0000000000000001e-7|#*",
+      "Device:R|1e3|#*"
+    ]
+  },
+  "anchors": [
+    "GND",
+    "IN",
+    "OUT"
+  ],
+  "components": {
+    "Device:C|1.0000000000000001e-7|": 1,
+    "Device:R|1e3|": 1
+  },
+  "nets": [],
+  "schema_version": 1,
+  "task": "rc_lowpass"
+}

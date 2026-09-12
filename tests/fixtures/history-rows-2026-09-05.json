@@ -1,0 +1,230 @@
+[
+  {
+    "id": 1,
+    "turn": 1,
+    "role": "user",
+    "content": {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "what is R1?\n\n<reply_language>en</reply_language>\n\n<state trust=\"harness\">\nmode: plan\napproval_policy: review\nwrites: not allowed (for a design request write the plan with plan.write; adopting the plan card is how the human enters Build)\nplan: none (incremental edits within the session ceiling)\n</state>\n\n<untrusted source=\"sch.summary\">\n{\"counts\":{\"symbols\":1},\"rails\":[\"GND\"],\"refdes\":{\"R\":{\"next\":2,\"used\":[[1,1]]}},\"sheets\":[{\"file\":\"root.kicad_sch\",\"path\":\"/\"}]}\n</untrusted>"
+        }
+      ],
+      "meta": {
+        "turn": 1,
+        "task": 1,
+        "kind": "user"
+      }
+    },
+    "compacted_by": null
+  },
+  {
+    "id": 2,
+    "turn": 1,
+    "role": "assistant",
+    "content": {
+      "role": "assistant",
+      "content": [],
+      "toolCalls": [
+        {
+          "id": "c1",
+          "name": "turn.begin",
+          "args": {
+            "kind": "question",
+            "headline": "what is R1"
+          }
+        }
+      ],
+      "meta": {
+        "turn": 1,
+        "task": 1,
+        "kind": "tool",
+        "paired": true
+      }
+    },
+    "compacted_by": null
+  },
+  {
+    "id": 3,
+    "turn": 1,
+    "role": "toolResult",
+    "content": {
+      "role": "toolResult",
+      "toolCallId": "c1",
+      "toolName": "turn.begin",
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"ceiling_source\":\"session_ceiling\",\"effective_envelope\":{\"allowed_ops\":[\"place_component\",\"delete_component\",\"delete_object\",\"move_component\",\"set_component_transform\",\"set_component_parameters\",\"set_component_attributes\",\"add_wire\",\"route_net\",\"add_junction\",\"add_no_connect\",\"add_net_label\",\"place_power_port\",\"place_gnd\",\"place_vcc\",\"rename_net\",\"add_bus\",\"add_bus_entry\",\"add_text\",\"add_rectangle\",\"add_text_box\",\"add_sheet\",\"add_sheet_pin\",\"delete_sheet_pin\",\"resize_sheet\",\"set_title_block\",\"place_divider\",\"place_decoupling\",\"place_pullup\",\"place_led_indicator\",\"place_rc_filter\",\"place_crystal\",\"place_array\",\"connect_and_label\",\"place_pwr_flag\",\"terminate_unused_unit\",\"arrange_group\"],\"components_added_max\":24,\"components_deleted_max\":0,\"instance_designators\":{},\"interfaces\":[],\"nets_renamable\":[],\"rails\":[],\"sheets\":[\"root.kicad_sch\"],\"source\":\"session_ceiling\",\"structural\":[],\"wires_max\":null},\"mode\":\"plan\",\"note\":\"allowed_ops was unrestricted: every opspec op is permitted within the counts above\",\"turn\":1,\"writes\":\"not_allowed\"}"
+        }
+      ],
+      "isError": false,
+      "meta": {
+        "turn": 1,
+        "task": 1,
+        "kind": "turn_begin"
+      }
+    },
+    "compacted_by": null
+  },
+  {
+    "id": 4,
+    "turn": 1,
+    "role": "assistant",
+    "content": {
+      "role": "assistant",
+      "content": [],
+      "toolCalls": [
+        {
+          "id": "c2",
+          "name": "sch.component",
+          "args": {
+            "ref": "R1"
+          }
+        }
+      ],
+      "meta": {
+        "turn": 1,
+        "task": 1,
+        "kind": "tool",
+        "paired": true
+      }
+    },
+    "compacted_by": null
+  },
+  {
+    "id": 5,
+    "turn": 1,
+    "role": "toolResult",
+    "content": {
+      "role": "toolResult",
+      "toolCallId": "c2",
+      "toolName": "sch.component",
+      "content": [
+        {
+          "type": "text",
+          "text": "<untrusted source=\"sch.component\">\n{\"ref\":\"R1\",\"units\":[{\"file\":\"root.kicad_sch\"}]}\n</untrusted>"
+        }
+      ],
+      "isError": false,
+      "meta": {
+        "turn": 1,
+        "task": 1,
+        "kind": "tool"
+      }
+    },
+    "compacted_by": null
+  },
+  {
+    "id": 6,
+    "turn": 1,
+    "role": "assistant",
+    "content": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "R1 is a resistor"
+        }
+      ],
+      "toolCalls": [],
+      "meta": {
+        "turn": 1,
+        "task": 1,
+        "kind": "prose"
+      }
+    },
+    "compacted_by": null
+  },
+  {
+    "id": 7,
+    "turn": 2,
+    "role": "user",
+    "content": {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "and R2?\n\n<reply_language>en</reply_language>\n\n<state trust=\"harness\">\nmode: plan\napproval_policy: review\nwrites: not allowed (for a design request write the plan with plan.write; adopting the plan card is how the human enters Build)\nplan: none (incremental edits within the session ceiling)\n</state>\n\n<untrusted source=\"sch.summary\">\n{\"counts\":{\"symbols\":1},\"rails\":[\"GND\"],\"refdes\":{\"R\":{\"next\":2,\"used\":[[1,1]]}},\"sheets\":[{\"file\":\"root.kicad_sch\",\"path\":\"/\"}]}\n</untrusted>"
+        }
+      ],
+      "meta": {
+        "turn": 2,
+        "task": 2,
+        "kind": "user"
+      }
+    },
+    "compacted_by": null
+  },
+  {
+    "id": 8,
+    "turn": 2,
+    "role": "assistant",
+    "content": {
+      "role": "assistant",
+      "content": [],
+      "toolCalls": [
+        {
+          "id": "c3",
+          "name": "turn.begin",
+          "args": {
+            "kind": "question",
+            "headline": "what is R2"
+          }
+        }
+      ],
+      "meta": {
+        "turn": 2,
+        "task": 2,
+        "kind": "tool",
+        "paired": true
+      }
+    },
+    "compacted_by": null
+  },
+  {
+    "id": 9,
+    "turn": 2,
+    "role": "toolResult",
+    "content": {
+      "role": "toolResult",
+      "toolCallId": "c3",
+      "toolName": "turn.begin",
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"ceiling_source\":\"session_ceiling\",\"effective_envelope\":{\"allowed_ops\":[\"place_component\",\"delete_component\",\"delete_object\",\"move_component\",\"set_component_transform\",\"set_component_parameters\",\"set_component_attributes\",\"add_wire\",\"route_net\",\"add_junction\",\"add_no_connect\",\"add_net_label\",\"place_power_port\",\"place_gnd\",\"place_vcc\",\"rename_net\",\"add_bus\",\"add_bus_entry\",\"add_text\",\"add_rectangle\",\"add_text_box\",\"add_sheet\",\"add_sheet_pin\",\"delete_sheet_pin\",\"resize_sheet\",\"set_title_block\",\"place_divider\",\"place_decoupling\",\"place_pullup\",\"place_led_indicator\",\"place_rc_filter\",\"place_crystal\",\"place_array\",\"connect_and_label\",\"place_pwr_flag\",\"terminate_unused_unit\",\"arrange_group\"],\"components_added_max\":24,\"components_deleted_max\":0,\"instance_designators\":{},\"interfaces\":[],\"nets_renamable\":[],\"rails\":[],\"sheets\":[\"root.kicad_sch\"],\"source\":\"session_ceiling\",\"structural\":[],\"wires_max\":null},\"mode\":\"plan\",\"note\":\"allowed_ops was unrestricted: every opspec op is permitted within the counts above\",\"turn\":1,\"writes\":\"not_allowed\"}"
+        }
+      ],
+      "isError": false,
+      "meta": {
+        "turn": 2,
+        "task": 2,
+        "kind": "turn_begin"
+      }
+    },
+    "compacted_by": null
+  },
+  {
+    "id": 10,
+    "turn": 2,
+    "role": "assistant",
+    "content": {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "R2 is a resistor too"
+        }
+      ],
+      "toolCalls": [],
+      "meta": {
+        "turn": 2,
+        "task": 2,
+        "kind": "prose"
+      }
+    },
+    "compacted_by": null
+  }
+]

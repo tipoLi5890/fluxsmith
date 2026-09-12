@@ -1,0 +1,10 @@
+[package]
+name = "sch-model"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "Normalised schematic model: integer-nm coordinates, the single transform function, symbols, wires, labels, sheets."
+
+[dependencies]
+serde = { workspace = true }

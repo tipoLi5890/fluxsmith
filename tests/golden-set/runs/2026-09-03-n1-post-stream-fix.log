@@ -1,0 +1,42 @@
+$ node scripts/golden-run.mjs --n 1 --budget-usd 15
+[golden] crystal_8mhz #1/1 ...
+[golden] crystal_8mhz #1: ok=true score=1.00 erc=0/0 cards=0 skipped=0 tokens=133913 usd=0.121 138s
+[golden] decoupling_3v3 #1/1 ...
+[golden] decoupling_3v3 #1: ok=true score=1.00 erc=0/0 cards=0 skipped=0 tokens=137596 usd=0.225 105s
+[golden] header_4pin #1/1 ...
+[golden] header_4pin #1: ok=true score=1.00 erc=0/4 cards=0 skipped=0 tokens=183937 usd=0.174 236s
+[golden] i2c_pullups #1/1 ...
+[golden] i2c_pullups #1: ok=true score=1.00 erc=0/2 cards=0 skipped=0 tokens=108736 usd=0.086 126s
+[golden] ldo_3v3 #1/1 ...
+[golden] ldo_3v3 #1: ok=false score=0.24 erc=0/0 cards=0 skipped=0 tokens=438011 usd=0.361 494s
+[golden] led_indicator #1/1 ...
+[golden] led_indicator #1: ok=true score=1.00 erc=0/2 cards=0 skipped=0 tokens=125626 usd=0.102 111s
+[golden] power_subsheet #1/1 ...
+[golden] power_subsheet #1: ok=true score=1.00 erc=4/0 cards=0 skipped=0 tokens=35021 usd=0.021 47s
+[golden] rc_lowpass #1/1 ...
+[golden] rc_lowpass #1: ok=true score=1.00 erc=0/2 cards=0 skipped=0 tokens=123266 usd=0.089 118s
+[golden] resistor_array #1/1 ...
+[golden] resistor_array #1: ok=true score=1.00 erc=0/4 cards=0 skipped=0 tokens=146529 usd=0.199 260s
+[golden] voltage_divider #1/1 ...
+[golden] voltage_divider #1: ok=true score=1.00 erc=0/2 cards=0 skipped=0 tokens=90737 usd=0.073 114s
+# golden run 2026-09-03T07:07:25.871Z (model gpt-5.6-sol, weighted 0.892, total USD 1.449)
+
+abort line: weighted pass 0.86 (need >= 0.70), cards median/p90 0/0, hard stops 0 (need <= 15), 0/N tasks: ldo_3v3
+
+| task | pass | score | erc err/warn | cards med/p90 | hard stops | skipped | tokens | usd | time |
+|---|---|---|---|---|---|---|---|---|---|
+| crystal_8mhz | 1/1 | 1.00 | 0/0 | 0/0 | 0 | 0 | 134k | 0.121 | 138s |
+| decoupling_3v3 | 1/1 | 1.00 | 0/0 | 0/0 | 0 | 0 | 138k | 0.225 | 105s |
+| header_4pin | 1/1 | 1.00 | 0/4 | 0/0 | 0 | 0 | 184k | 0.174 | 236s |
+| i2c_pullups | 1/1 | 1.00 | 0/2 | 0/0 | 0 | 0 | 109k | 0.086 | 126s |
+| ldo_3v3 | 0/1 | 0.24 | 0/0 | 0/0 | 0 | 0 | 438k | 0.361 | 494s |
+| led_indicator | 1/1 | 1.00 | 0/2 | 0/0 | 0 | 0 | 126k | 0.102 | 111s |
+| power_subsheet | 1/1 | 1.00 | 4/0 | 0/0 | 0 | 0 | 35k | 0.021 | 47s |
+| rc_lowpass | 1/1 | 1.00 | 0/2 | 0/0 | 0 | 0 | 123k | 0.089 | 118s |
+| resistor_array | 1/1 | 1.00 | 0/4 | 0/0 | 0 | 0 | 147k | 0.199 | 260s |
+| voltage_divider | 1/1 | 1.00 | 0/2 | 0/0 | 0 | 0 | 91k | 0.073 | 114s |
+
+- ldo_3v3: component Device:C|2.2e-5|: expected 1, found 0; component Device:C|9.999999999999999e-6|: expected 1, found 0; unexpected component Device:C_Polarized|2.2e-5| x1; unexpected component Device:C_Polarized|9.999999999999999e-6| x1
+
+written tests/golden-set/runs/2026-09-03T06-37-13-122Z.json
+projects kept under <tmpdir>/fluxsmith-golden-wicofe (delete when done)

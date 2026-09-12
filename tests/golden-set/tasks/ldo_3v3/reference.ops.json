@@ -1,0 +1,54 @@
+{
+ "protocol_version": 1,
+ "ops": [
+  {
+   "op": "place_component",
+   "lib_id": "Regulator_Linear:AMS1117-3.3",
+   "designator": "U1",
+   "x_mil": 3000,
+   "y_mil": 3000
+  },
+  {
+   "op": "place_power_port",
+   "lib_id": "power:VDC",
+   "net_name": "VDC",
+   "at": "U1.3",
+   "rotation": 0
+  },
+  {
+   "op": "place_vcc",
+   "at": "U1.2",
+   "net_name": "+3V3"
+  },
+  {
+   "op": "place_gnd",
+   "at": "U1.1"
+  },
+  {
+   "op": "place_decoupling",
+   "power_net": "VDC",
+   "x_mil": 2200,
+   "y_mil": 3200,
+   "designator": "C1",
+   "value": "10u",
+   "gnd_net": "GND"
+  },
+  {
+   "op": "place_decoupling",
+   "power_net": "+3V3",
+   "x_mil": 3800,
+   "y_mil": 3200,
+   "designator": "C2",
+   "value": "22u",
+   "gnd_net": "GND"
+  },
+  {
+   "op": "place_pwr_flag",
+   "at": "C1.1"
+  },
+  {
+   "op": "place_pwr_flag",
+   "at": "C1.2"
+  }
+ ]
+}

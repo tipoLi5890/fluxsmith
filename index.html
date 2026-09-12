@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fluxsmith</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Some provider SDKs bundled through pi-ai touch Node globals at module
+      // initialisation; give them an inert `process` so the webview never dies.
+      if (typeof window.process === "undefined") {
+        window.process = { env: {}, versions: {}, platform: "browser", emit: function () {}, on: function () {}, nextTick: function (f) { setTimeout(f, 0); } };
+      }
+      window.addEventListener("unhandledrejection", function (e) {
+        var r = e.reason; var msg = "boot rejection: " + (r && r.message ? r.message + "\n" + (r.stack || "") : String(r));
+        try { window.__TAURI_INTERNALS__.invoke("log_write", { level: "error", message: msg.slice(0, 2000), req_id: null }); } catch (_) {}
+      });
+      // Catch module-initialisation failures that happen before the app installs
+      // its own error logging; forwarded to the Rust log when Tauri is present.
+      window.addEventListener("error", function (e) {
+        var msg = "boot error: " + e.message + " @" + e.filename + ":" + e.lineno;
+        try { window.__TAURI_INTERNALS__.invoke("log_write", { level: "error", message: msg, req_id: null }); } catch (_) {}
+        var root = document.getElementById("root");
+        if (root && !root.childElementCount) root.textContent = msg;
+      });
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

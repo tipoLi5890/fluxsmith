@@ -1,0 +1,31 @@
+{
+  "anchored_nets": {
+    "LED_CTRL": [
+      "Device:R|2.2e3|#*"
+    ]
+  },
+  "anchors": [
+    "LED_CTRL"
+  ],
+  "changed": [
+    {
+      "ref": "R1",
+      "field": "Value",
+      "before": "1k",
+      "after": "2k2"
+    }
+  ],
+  "components": {
+    "Device:LED||": 1,
+    "Device:R|2.2e3|": 1
+  },
+  "nets": [
+    [
+      "Device:LED||#2",
+      "Device:R|2.2e3|#*"
+    ]
+  ],
+  "schema_version": 1,
+  "task": "edit_existing_value",
+  "untouched_lines": true
+}

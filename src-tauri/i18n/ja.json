@@ -1,0 +1,7 @@
+{
+  "webview2.title": "fluxsmith を起動できません",
+  "webview2.missing": "WebView2 Runtime がないか破損しているため、画面を表示できません。",
+  "webview2.next": "Microsoft から WebView2 をインストールまたは修復してから、fluxsmith を再起動してください。3 回連続で失敗すると logs/crashes/ にレポートを残します。",
+  "webview2.download": "WebView2 をダウンロード",
+  "webview2.quit": "終了"
+}

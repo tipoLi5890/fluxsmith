@@ -1,0 +1,9 @@
+onlyBuiltDependencies:
+  - esbuild
+ignoredBuiltDependencies:
+  - "@google/genai"
+  - protobufjs
+allowBuilds:
+  '@google/genai': false
+  esbuild: true
+  protobufjs: false

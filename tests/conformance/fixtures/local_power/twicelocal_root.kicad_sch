@@ -1,0 +1,69 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "00000300-0000-4000-8000-000000000300")
+	(paper "A4")
+	(lib_symbols
+	)
+	(sheet
+		(at 50.8 50.8)
+		(size 25.4 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke (width 0.1524) (type solid))
+		(fill (color 0 0 0 0.0000))
+		(uuid "00000302-0000-4000-8000-000000000302")
+		(property "Sheetname" "ampA"
+			(at 50.8 50.099999999999994 0)
+			(effects (font (size 1.27 1.27)) (justify left bottom))
+		)
+		(property "Sheetfile" "twicelocal_child.kicad_sch"
+			(at 50.8 76.89999999999999 0)
+			(effects (font (size 1.27 1.27)) (justify left top))
+		)
+		(instances
+			(project "twicelocal"
+				(path "/00000300-0000-4000-8000-000000000300"
+					(page "2")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 101.6 50.8)
+		(size 25.4 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke (width 0.1524) (type solid))
+		(fill (color 0 0 0 0.0000))
+		(uuid "00000303-0000-4000-8000-000000000303")
+		(property "Sheetname" "ampB"
+			(at 101.6 50.099999999999994 0)
+			(effects (font (size 1.27 1.27)) (justify left bottom))
+		)
+		(property "Sheetfile" "twicelocal_child.kicad_sch"
+			(at 101.6 76.89999999999999 0)
+			(effects (font (size 1.27 1.27)) (justify left top))
+		)
+		(instances
+			(project "twicelocal"
+				(path "/00000300-0000-4000-8000-000000000300"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

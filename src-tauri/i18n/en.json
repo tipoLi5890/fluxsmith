@@ -1,0 +1,7 @@
+{
+  "webview2.title": "fluxsmith cannot start",
+  "webview2.missing": "The WebView2 Runtime is missing or damaged, so the interface cannot be displayed.",
+  "webview2.next": "Install or repair WebView2 from Microsoft, then start fluxsmith again. Three failures in a row write a report to logs/crashes/.",
+  "webview2.download": "Download WebView2",
+  "webview2.quit": "Quit"
+}

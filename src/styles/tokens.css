@@ -1,0 +1,136 @@
+/* SPDX-License-Identifier: Apache-2.0 */
+/* Design tokens (docs/design-system.md). The ONLY file allowed to contain raw colour literals. */
+:root {
+  --bg-1: #ffffff;
+  --bg-2: #fafafa;
+  --gray-100: #f2f2f2;
+  --gray-200: #ebebeb;
+  --gray-300: #e6e6e6;
+  --gray-400: #ebebeb;
+  --gray-500: #d9d9d9;
+  --gray-600: #a8a8a8;
+  --gray-700: #8f8f8f;
+  --gray-800: #7d7d7d;
+  --gray-900: #666666;
+  --gray-1000: #171717;
+  --fg: #000000;
+  --fg-inverse: #ffffff;
+
+  --red-100: #fff0f0; --red-500: #e5484d; --red-900: #cd2b31;
+  --amber-100: #fff7e6; --amber-500: #f5a623; --amber-900: #a35200;
+  --green-100: #eefbf1; --green-500: #45a557; --green-900: #1f7a3a;
+  --blue-100: #eef4ff; --blue-500: #3b82f6; --blue-900: #1d4ed8;
+
+  --popover-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --backdrop: rgba(0, 0, 0, 0.35);
+
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px;
+  --radius-1: 6px; --radius-2: 8px; --radius-pill: 999px;
+
+  --font-sans: "Geist Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --text-h1: 20px; --text-h2: 16px; --text-label: 14px; --text-label-sm: 13px; --text-copy: 14px; --text-copy-sm: 13px; --text-mono: 13px; --text-mono-sm: 12px;
+  --lh-copy: 1.5; --lh-label: 1.2;
+
+  --focus-ring: 2px solid var(--fg);
+  --canvas-bg: #ffffff;
+  /* Canvas (schematic sheet) palette: KiCad eeschema defaults. This is the one deliberate exception to the
+     black/white/grey system (docs/design-system.md, canvas section): sheet content uses KiCad hues so the
+     drawing reads like eeschema; state overlays (selection/focus/changed/finding/hover) stay semantic. */
+  --fs-canvas-bg: var(--bg-2);
+  --fs-canvas-paper: #ffffff;
+  --fs-canvas-frame: #800000;
+  --fs-canvas-grid: #b0b0b0;
+  --fs-canvas-wire: #008000;
+  --fs-canvas-bus: #0000c0;
+  --fs-canvas-body: #800000;
+  --fs-canvas-body-fill: #ffffc2;
+  --fs-canvas-pin: #800000;
+  --fs-canvas-pin-text: #000000;
+  --fs-canvas-reference: #008080;
+  --fs-canvas-value: #008080;
+  --fs-canvas-field: #008080;
+  --fs-canvas-text: #000000;
+  --fs-canvas-label: #000000;
+  --fs-canvas-global-label: #c00000;
+  --fs-canvas-hier-label: #804040;
+  --fs-canvas-sheet: #8000c0;
+  --fs-canvas-sheet-fill: #ffffff;
+  --fs-canvas-sheet-text: #8000c0;
+  --fs-canvas-junction: #008000;
+  --fs-canvas-noconnect: #0000c0;
+  --fs-canvas-dnp: var(--gray-700);
+  --fs-canvas-unresolved: var(--amber-900);
+  --fs-canvas-selection: var(--fg);
+  --fs-canvas-focus: var(--gray-600);
+  --fs-canvas-created: var(--green-500);
+  --fs-canvas-changed: var(--blue-500);
+  --fs-canvas-finding: var(--amber-500);
+  --fs-canvas-finding-error: var(--red-500);
+  --fs-canvas-finding-warning: var(--amber-500);
+  --fs-canvas-finding-info: var(--gray-900);
+  --fs-canvas-hover: var(--blue-500);
+}
+
+:root[data-theme="dark"] {
+  --bg-1: #000000;
+  --bg-2: #0a0a0a;
+  --gray-100: #1a1a1a;
+  --gray-200: #1f1f1f;
+  --gray-300: #292929;
+  --gray-400: #2e2e2e;
+  --gray-500: #454545;
+  --gray-600: #878787;
+  --gray-700: #8f8f8f;
+  --gray-800: #7d7d7d;
+  --gray-900: #a1a1a1;
+  --gray-1000: #ededed;
+  --fg: #ffffff;
+  --fg-inverse: #000000;
+  --red-100: #2a1212; --red-500: #e5484d; --red-900: #ff6369;
+  --amber-100: #2b1d05; --amber-500: #f5a623; --amber-900: #ffb224;
+  --green-100: #0f2a17; --green-500: #45a557; --green-900: #4cc38a;
+  --blue-100: #0f1f3d; --blue-500: #3b82f6; --blue-900: #7aa7ff;
+  --popover-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --backdrop: rgba(0, 0, 0, 0.6);
+  --canvas-bg: #0a0a0a;
+  /* KiCad Dark family hues on a near-black paper (values tuned for contrast on #141414, not a byte copy). */
+  --fs-canvas-bg: var(--bg-2);
+  --fs-canvas-paper: #141414;
+  --fs-canvas-frame: #b06060;
+  --fs-canvas-grid: #3c3c3c;
+  --fs-canvas-wire: #8cd47b;
+  --fs-canvas-bus: #6fa8ff;
+  --fs-canvas-body: #e08a80;
+  --fs-canvas-body-fill: #2a2a1e;
+  --fs-canvas-pin: #e08a80;
+  --fs-canvas-pin-text: #e8e8e8;
+  --fs-canvas-reference: #5ccfcf;
+  --fs-canvas-value: #5ccfcf;
+  --fs-canvas-field: #5ccfcf;
+  --fs-canvas-text: #e8e8e8;
+  --fs-canvas-label: #e8e8e8;
+  --fs-canvas-global-label: #ff7a7a;
+  --fs-canvas-hier-label: #d9a3a3;
+  --fs-canvas-sheet: #c58cff;
+  --fs-canvas-sheet-fill: #1a1a1a;
+  --fs-canvas-sheet-text: #c58cff;
+  --fs-canvas-junction: #8cd47b;
+  --fs-canvas-noconnect: #6fa8ff;
+  --fs-canvas-dnp: var(--gray-700);
+  --fs-canvas-unresolved: var(--amber-900);
+  --fs-canvas-selection: var(--fg);
+  --fs-canvas-focus: var(--gray-600);
+  --fs-canvas-created: var(--green-500);
+  --fs-canvas-changed: var(--blue-500);
+  --fs-canvas-finding: var(--amber-500);
+  --fs-canvas-finding-error: var(--red-500);
+  --fs-canvas-finding-warning: var(--amber-500);
+  --fs-canvas-finding-info: var(--gray-900);
+  --fs-canvas-hover: var(--blue-500);
+}
+
+:lang(zh-Hant) { --font-cjk: "PingFang TC", "Microsoft JhengHei", "Noto Sans CJK TC", sans-serif; }
+:lang(zh-Hans) { --font-cjk: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; }
+:lang(ja) { --font-cjk: "Hiragino Sans", "Yu Gothic UI", "Noto Sans CJK JP", sans-serif; }
+:lang(en) { --font-cjk: sans-serif; }

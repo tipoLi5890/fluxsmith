@@ -1,0 +1,64 @@
+[package]
+name = "fluxsmith-app"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+description = "fluxsmith desktop app (Tauri effect kernel)"
+
+[lib]
+name = "fluxsmith_app"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["protocol-asset"] }
+tauri-plugin-dialog = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-single-instance = "2"
+kicad-sexpr = { path = "../crates/kicad-sexpr" }
+sch-model = { path = "../crates/sch-model" }
+sch-read = { path = "../crates/sch-read" }
+sch-net = { path = "../crates/sch-net" }
+sch-ops = { path = "../crates/sch-ops" }
+sch-write = { path = "../crates/sch-write" }
+sch-check = { path = "../crates/sch-check" }
+sch-geom = { path = "../crates/sch-geom" }
+sch-libwrite = { path = "../crates/sch-libwrite" }
+easyeda-convert = { path = "../crates/easyeda-convert" }
+urlencoding = "2"
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+uuid = { workspace = true }
+sha2 = { workspace = true }
+tempfile = { workspace = true }
+regex = { workspace = true }
+rusqlite = { version = "0.40", features = ["bundled", "backup"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "stream", "json"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "fs", "io-util", "net"] }
+futures-util = "0.3"
+notify = "8"
+toml = "0.9"
+dirs = "6"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+log = "0.4"
+zip = { version = "4", default-features = false, features = ["deflate"] }
+pdf-extract = "0.9"
+nanohtml2text = "0.2"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp"] }
+parking_lot = "0.12"
+url = "2"
+base64 = "0.22"
+arboard = { version = "3", default-features = false, features = ["image-data"] }
+rfd = { version = "0.16", default-features = false }
+sys-locale = "0.3"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-foundation = { version = "0.3", features = ["NSProcessInfo", "NSString", "NSObject"] }
+
+[dev-dependencies]
+tempfile = { workspace = true }

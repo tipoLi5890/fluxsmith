@@ -1,0 +1,52 @@
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# Rust / Tauri backend
+src-tauri/target/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Local secrets / scratch (never commit real credentials even in dev)
+*.local
+.env
+.env.*
+
+# Design docs, specs and research notes stay local during the private phase (see CLAUDE.md)
+docs/
+
+# Engine write backups: produced next to any file the engine rewrites, never committed
+*.bak
+
+# Project sidecar of any KiCad project opened with fluxsmith (never commit)
+.fluxsmith/
+
+# Rust workspace target at root
+target/
+
+# Signing material and release artifacts
+*.pfx
+*.p12
+releases/
+node_modules/
+dist/
+src-tauri/gen/
+src-tauri/icons/android/
+src-tauri/icons/ios/
+tests/golden-set/runs/*.json
+fuzz/target/
+fuzz/corpus/
+fuzz/artifacts/
+# KiCad writes per-user local settings next to a project when a tool opens it (oracle runs).
+tests/conformance/fixtures/**/*.kicad_prl
+
+# Art exploration (codex-visual skill): local-only, like docs/
+ArtDirection/
+ART_DIRECTION.md

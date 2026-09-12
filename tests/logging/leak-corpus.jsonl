@@ -1,0 +1,10 @@
+{"id": "anthropic-key", "input": "provider rejected sk-ant-api03-abcdefghijklmnopqrstuvwxyz0123456789", "must_not_contain": "abcdefghijklmnopqrstuvwxyz0123456789"}
+{"id": "openai-key", "input": "Authorization failed for sk-proj-ZZZZZZZZZZZZZZZZZZZZZZZZ", "must_not_contain": "ZZZZZZZZZZZZZZZZZZZZ"}
+{"id": "bearer", "input": "header Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U", "must_not_contain": "dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"}
+{"id": "x-api-key-json", "input": "{\"x-api-key\": \"sk-live-0123456789abcdef0123\"}", "must_not_contain": "0123456789abcdef0123"}
+{"id": "google-key", "input": "AIzaSyD-EXAMPLE1234567890abcdefghijk", "must_not_contain": "EXAMPLE1234567890abcdefghijk"}
+{"id": "jwt-alone", "input": "token eyJhbGciOiJSUzI1NiIsImtpZCI6IjEifQ.eyJhdWQiOiJ4In0.QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVo", "must_not_contain": "QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVo"}
+{"id": "codex-refresh", "input": "refresh_token=rt_ABCDEFGHIJKLMNOPQRSTUVWXYZ012345 expired", "must_not_contain": "ABCDEFGHIJKLMNOPQRSTUVWXYZ012345"}
+{"id": "url-query", "input": "GET https://api.example.com/v1/parts?key=SECRETQUERY123456&q=lm317", "must_not_contain": "SECRETQUERY123456"}
+{"id": "benign-refdes", "input": "placed R1 10k at (1000, 2000) on sheet /", "must_not_contain": "[masked]"}
+{"id": "benign-lcsc", "input": "parts.search C25804 stock 12000", "must_not_contain": "[masked]"}
