@@ -1,13 +1,11 @@
-# TEMPORARY DIAGNOSTIC -- delete this file once the cause is fixed.
+# TEMPORARY DIAGNOSTIC -- delete once the cause is fixed.
 #
-# `cargo test -p fluxsmith-app --lib` dies on windows-latest with exit code
-# 0xc0000139 (STATUS_ENTRYPOINT_NOT_FOUND) before a single test runs: the binary
-# links, but the loader finds a DLL that lacks an export it imports. The crate
-# depends on `tauri`, so the test executable carries WebView2 imports even though
-# all 120 lib tests are pure logic. This run answers three things in one trip:
-# which (DLL, symbol) pair is missing, which copies of the DLL the runner has and
-# what they export, and whether placing the right copy beside the executable is
-# enough to make it run.
+# `cargo test -p fluxsmith-app --lib` dies on windows-latest with 0xc0000139
+# (STATUS_ENTRYPOINT_NOT_FOUND) before any test runs. Two earlier stories were
+# wrong: it is NOT WebView2Loader (the import table does not mention it), and the
+# first "no missing entry points" answer was vacuous because the symbol regex
+# matched nothing. This run takes three independent shots and uploads every raw
+# dump as an artifact so the analysis happens off the log.
 name: diag-windows
 
 on:
@@ -28,7 +26,7 @@ jobs:
         with: { node-version: 24, cache: pnpm }
       - run: pnpm install --frozen-lockfile
 
-      - name: Build the test executable without running it
+      - name: Build the test executable
         id: build
         shell: pwsh
         run: |
@@ -40,71 +38,92 @@ jobs:
           Write-Host "TEST EXE: $exe"
           "exe=$exe" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
-      - name: Reproduce the failure and report the exit code
+      - name: Shot 1 - let the loader say it itself (cdb + loader snaps)
         continue-on-error: true
         shell: pwsh
         run: |
+          $out = "$env:RUNNER_TEMP\diag"; New-Item -ItemType Directory -Force -Path $out | Out-Null
           $exe = "${{ steps.build.outputs.exe }}"
-          & $exe --list 2>&1 | Out-String | Write-Host
-          $code = $LASTEXITCODE
-          Write-Host ("EXIT: {0} (0x{1:x8})" -f $code, $code)
+          $kit = "${env:ProgramFiles(x86)}\Windows Kits\10\Debuggers\x64"
+          "cdb dir exists: $(Test-Path $kit)" | Tee-Object "$out\cdb.txt"
+          if (-not (Test-Path "$kit\cdb.exe")) {
+            "NO cdb.exe -- shot 1 unavailable" | Tee-Object "$out\cdb.txt" -Append
+            Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10" -Directory |
+              ForEach-Object { $_.Name } | Out-File "$out\kits.txt"
+            exit 0
+          }
+          # Loader snaps must be armed before process creation; gflags does it per image.
+          if (Test-Path "$kit\gflags.exe") {
+            & "$kit\gflags.exe" -i (Split-Path -Leaf $exe) +sls 2>&1 | Tee-Object "$out\gflags.txt"
+          }
+          & "$kit\cdb.exe" -c "g; q" -- $exe --list 2>&1 | Tee-Object "$out\cdb.txt" -Append
+          Write-Host "--- lines the loader complained about ---"
+          Select-String -Path "$out\cdb.txt" -Pattern 'entry ?point|LDR:|Unable to|0xc0000139|not found' |
+            ForEach-Object { Write-Host $_.Line }
 
-      - name: Import table vs what the loader would actually resolve
+      - name: Shot 2 and 3 - full import/export dumps and what the loader resolves
         continue-on-error: true
         shell: pwsh
         run: |
-          $ErrorActionPreference = 'Continue'
+          $out = "$env:RUNNER_TEMP\diag"; New-Item -ItemType Directory -Force -Path $out | Out-Null
           $exe = "${{ steps.build.outputs.exe }}"
 
-          # dumpbin needs its own VC environment or it exits silently producing nothing,
-          # which is exactly what the previous run did. Import vcvars64 into this shell.
           $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
           $vs = & $vswhere -latest -property installationPath
-          $vcvars = Join-Path $vs 'VC\Auxiliary\Build\vcvars64.bat'
-          Write-Host "vcvars: $vcvars (exists: $(Test-Path $vcvars))"
-          cmd /c "`"$vcvars`" >nul 2>&1 && set" | ForEach-Object {
+          cmd /c "`"$vs\VC\Auxiliary\Build\vcvars64.bat`" >nul 2>&1 && set" | ForEach-Object {
             if ($_ -match '^([^=]+)=(.*)$') { Set-Item -Path "env:$($matches[1])" -Value $matches[2] -ErrorAction SilentlyContinue }
           }
           $db = (Get-Command dumpbin.exe -ErrorAction SilentlyContinue).Source
-          Write-Host "dumpbin on PATH: $db"
-          if (-not $db) { Write-Host "STILL NO WORKING DUMPBIN"; exit 1 }
+          "dumpbin: $db" | Tee-Object "$out\tools.txt"
+          if (-not $db) { exit 1 }
 
-          Write-Host "===== raw /imports (first 200 lines) ====="
-          $raw = & $db /nologo /imports $exe 2>&1
-          $raw | Select-Object -First 200 | ForEach-Object { Write-Host $_ }
+          # Environment the loader will use.
+          $env:PATH -split ';' | Out-File "$out\path.txt"
+          Get-ChildItem (Split-Path $exe) -Filter *.dll | Select-Object Name,Length |
+            Out-File "$out\exedir-dlls.txt"
 
-          # Parse the import table into DLL -> imported names.
-          $imports = @{}; $cur = $null
-          foreach ($line in $raw) {
-            if ($line -match '^\s{4}(\S+\.dll)\s*$') { $cur = $matches[1]; $imports[$cur] = New-Object System.Collections.ArrayList; continue }
-            if ($cur -and $line -match '^\s+[0-9A-Fa-f]{8,16}\s+(?:[0-9A-Fa-f]+\s+)?([A-Za-z_][A-Za-z0-9_@\?$]*)\s*$') {
-              [void]$imports[$cur].Add($matches[1])
-            }
-          }
-          Write-Host ""
-          Write-Host "===== parsed: $($imports.Keys.Count) DLLs ====="
-          foreach ($d in $imports.Keys | Sort-Object) { Write-Host ("  {0,-40} {1} names" -f $d, $imports[$d].Count) }
-
-          # For each DLL, find the file the loader would use and diff names against its exports.
+          # Transitive walk of the static import graph.
+          $resolved = @{}; $queue = New-Object System.Collections.Queue
+          $queue.Enqueue($exe)
           $searchDirs = @((Split-Path $exe), "$env:SystemRoot\System32") + ($env:PATH -split ';' | Where-Object { $_ })
-          Write-Host ""
-          Write-Host "===== MISSING ENTRY POINTS ====="
-          $found = $false
-          foreach ($d in $imports.Keys | Sort-Object) {
-            $file = $null
-            foreach ($dir in $searchDirs) {
-              $c = Join-Path $dir $d
-              if (Test-Path $c) { $file = $c; break }
+          $report = New-Object System.Collections.ArrayList
+          $depth = 0
+          while ($queue.Count -gt 0 -and $depth -lt 400) {
+            $img = $queue.Dequeue(); $depth++
+            $key = (Split-Path -Leaf $img).ToLower()
+            if ($resolved.ContainsKey($key)) { continue }
+            $resolved[$key] = $img
+            $raw = & $db /nologo /imports $img 2>&1
+            $raw | Out-File "$out\imports-$key.txt"
+            $cur = $null
+            foreach ($l in $raw) {
+              if ($l -match '^\s{2,6}(\S+\.dll)\s*$') { $cur = $matches[1] }
+              elseif ($cur -and $l -match '^\s{6,}([0-9A-Fa-f]+)\s+(\S+)\s*$') {
+                [void]$report.Add([pscustomobject]@{ Image = $key; Dll = $cur; Symbol = $matches[2] })
+              }
             }
-            if (-not $file) { Write-Host "  $d -> NOT FOUND on the search path"; $found = $true; continue }
-            $ex = & $db /nologo /exports $file 2>&1
-            $names = @{}
-            foreach ($l in $ex) { if ($l -match '^\s+\d+\s+[0-9A-Fa-f]+\s+[0-9A-Fa-f]{8}\s+(\S+)') { $names[$matches[1]] = $true } }
-            $missing = $imports[$d] | Where-Object { -not $names.ContainsKey($_) }
-            if ($missing) {
-              $found = $true
-              Write-Host "  $d  (resolves to $file, $($names.Count) exports)"
-              foreach ($m in $missing) { Write-Host "      MISSING: $m" }
+            foreach ($d in ($report | Where-Object { $_.Image -eq $key } | Select-Object -ExpandProperty Dll -Unique)) {
+              $f = $null
+              foreach ($dir in $searchDirs) { $c = Join-Path $dir $d; if (Test-Path $c) { $f = $c; break } }
+              if ($f) { $queue.Enqueue($f) } else { "UNRESOLVED $d (needed by $key)" | Out-File "$out\unresolved.txt" -Append }
             }
           }
-          if (-not $found) { Write-Host "  none - every imported name is exported by the file the loader would pick" }
+          $report | Export-Csv -NoTypeInformation "$out\imports.csv"
+          "images walked: $($resolved.Count), import records: $($report.Count)" | Tee-Object "$out\tools.txt" -Append
+
+          # Exports of every image the loader would pick, plus its version.
+          foreach ($kv in $resolved.GetEnumerator()) {
+            $f = $kv.Value
+            $v = (Get-Item $f -ErrorAction SilentlyContinue).VersionInfo.FileVersion
+            "$($kv.Key)`t$v`t$f" | Out-File "$out\resolved.txt" -Append
+            & $db /nologo /exports $f 2>&1 | Out-File "$out\exports-$($kv.Key).txt"
+          }
+          Write-Host "=== resolved images ==="
+          Get-Content "$out\resolved.txt" | ForEach-Object { Write-Host "  $_" }
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: windows-loader-diag
+          path: ${{ runner.temp }}/diag
+          if-no-files-found: warn
