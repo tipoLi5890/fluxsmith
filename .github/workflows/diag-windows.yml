@@ -120,22 +120,29 @@ jobs:
             & $db /nologo /exports $d.FullName | Select-String -Pattern '^\s+\d+\s' | Out-String | Write-Host
           }
 
-      - name: Hypothesis B - put the registry copy beside the executable and retry
+      - name: The fix - put the x64 loader beside the executable and retry
         continue-on-error: true
         shell: pwsh
         run: |
+          # The previous attempt picked arm64 (alphabetically first) and proved nothing.
+          # Take the x64 copy the build script produced, which matches what was linked.
           $exe = "${{ steps.build.outputs.exe }}"
           $dir = Split-Path $exe
-          $src = Get-ChildItem -Path "$env:USERPROFILE\.cargo\registry\src" -Recurse -Filter WebView2Loader.dll -ErrorAction SilentlyContinue |
+          $src = Get-ChildItem -Path "target\debug\build" -Recurse -Filter WebView2Loader.dll -ErrorAction SilentlyContinue |
+                 Where-Object { $_.FullName -match '\\out\\x64\\' } |
                  Select-Object -First 1
-          if (-not $src) {
-            Write-Host "no WebView2Loader.dll in the cargo registry: hypothesis B not testable"
-            exit 0
-          }
-          Write-Host "copying $($src.FullName) -> $dir"
+          if (-not $src) { Write-Host "no x64 loader under target/debug/build"; exit 1 }
+          Write-Host "copying $($src.FullName) ($($src.VersionInfo.FileVersion)) -> $dir"
           Copy-Item $src.FullName -Destination $dir -Force
-          & $exe --list 2>&1 | Select-Object -First 5 | Out-String | Write-Host
+          & $exe --list 2>&1 | Select-Object -First 3 | Out-String | Write-Host
           $code = $LASTEXITCODE
-          Write-Host ("EXIT AFTER COPY: {0} (0x{1:x8})" -f $code, $code)
-          if ($code -eq 0) { Write-Host "HYPOTHESIS B CONFIRMED: the adjacent DLL fixes it" }
-          else { Write-Host "HYPOTHESIS B REJECTED: still failing" }
+          Write-Host ("EXIT AFTER x64 COPY: {0} (0x{1:x8})" -f $code, $code)
+          if ($code -eq 0) { Write-Host "FIX CONFIRMED: the adjacent x64 loader makes it start" }
+          else { Write-Host "FIX REJECTED: still failing" }
+
+      - name: And the real thing - the whole lib test suite
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          cargo test -p fluxsmith-app --lib 2>&1 | Select-Object -Last 15 | Out-String | Write-Host
+          Write-Host ("CARGO TEST EXIT: {0}" -f $LASTEXITCODE)
