@@ -1014,7 +1014,7 @@ checksum = "d0881ea181b1df73ff77ffaaf9c7544ecc11e82fba9b5f27b262a3c73a332555"
 
 [[package]]
 name = "easyeda-convert"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "kicad-sexpr",
  "sch-libwrite",
@@ -1213,7 +1213,7 @@ dependencies = [
 
 [[package]]
 name = "fluxsmith-app"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "arboard",
  "base64 0.22.1",
@@ -1263,7 +1263,7 @@ dependencies = [
 
 [[package]]
 name = "fluxsmith-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "kicad-sexpr",
  "sch-check",
@@ -2338,7 +2338,7 @@ dependencies = [
 
 [[package]]
 name = "kicad-sexpr"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "thiserror 2.0.20",
 ]
@@ -3719,7 +3719,7 @@ dependencies = [
 
 [[package]]
 name = "sch-check"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "kicad-sexpr",
  "regex",
@@ -3735,7 +3735,7 @@ dependencies = [
 
 [[package]]
 name = "sch-geom"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "kicad-sexpr",
  "sch-model",
@@ -3749,7 +3749,7 @@ dependencies = [
 
 [[package]]
 name = "sch-libwrite"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "kicad-sexpr",
  "sch-model",
@@ -3760,14 +3760,14 @@ dependencies = [
 
 [[package]]
 name = "sch-model"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "serde",
 ]
 
 [[package]]
 name = "sch-net"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "hex",
  "kicad-sexpr",
@@ -3782,7 +3782,7 @@ dependencies = [
 
 [[package]]
 name = "sch-ops"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "sch-model",
  "serde",
@@ -3793,7 +3793,7 @@ dependencies = [
 
 [[package]]
 name = "sch-read"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "kicad-sexpr",
  "sch-model",
@@ -3804,7 +3804,7 @@ dependencies = [
 
 [[package]]
 name = "sch-write"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "hex",
  "kicad-sexpr",

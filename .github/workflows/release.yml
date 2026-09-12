@@ -85,8 +85,19 @@ jobs:
       # `pnpm tauri build` runs `pnpm build` first, so every lint and the typecheck gate the release.
       # To sign, set APPLE_SIGNING_IDENTITY (plus APPLE_CERTIFICATE / APPLE_CERTIFICATE_PASSWORD, and
       # APPLE_ID / APPLE_PASSWORD / APPLE_TEAM_ID to notarize) on these two steps.
+      # Ad-hoc sign the bundle. Without an identity tauri leaves the .app unsigned
+      # while the Rust linker has already ad-hoc signed the inner binary, so the
+      # bundle carries a signature that claims sealed resources it does not have:
+      # `codesign --verify` fails with "code has no resources but signature
+      # indicates they must be present", and a quarantined download is reported as
+      # "damaged and can't be opened" with no Open Anyway offered. Signing with "-"
+      # binds Info.plist and seals resources, which makes the signature valid but
+      # unnotarized -- Gatekeeper then merely rejects it, which the user can
+      # override. Verified on 0.1.0's artifacts before and after.
       - run: pnpm tauri build --target aarch64-apple-darwin
+        env: { APPLE_SIGNING_IDENTITY: "-" }
       - run: pnpm tauri build --target x86_64-apple-darwin
+        env: { APPLE_SIGNING_IDENTITY: "-" }
 
       - name: Collect
         shell: bash
@@ -211,7 +222,9 @@ jobs:
             echo "fluxsmith does nothing to work around it on your behalf."
             echo
             echo "- **macOS** - open the .dmg, drag fluxsmith to Applications, launch it once, then"
-            echo "  allow it under System Settings > Privacy & Security > Open Anyway."
+            echo "  allow it under System Settings > Privacy & Security > Open Anyway. If macOS"
+            echo "  refuses outright, clear the download flag instead:"
+            echo '  \`xattr -dr com.apple.quarantine /Applications/fluxsmith.app\`"
             echo "- **Windows** - run the installer and choose More info > Run anyway. It installs"
             echo "  for the current user, so no administrator prompt appears."
             echo

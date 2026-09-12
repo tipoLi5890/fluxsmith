@@ -72,7 +72,8 @@
 它們未簽章，所以第一次啟動會被攔下。這是預期行為，fluxsmith 不會代你繞過它：
 
 - **macOS** —— 開啟 `.dmg`，把 fluxsmith 拖進「應用程式」，啟動一次，然後在
-  系統設定 > 隱私與安全性 > 仍要打開 放行。
+  系統設定 > 隱私與安全性 > 仍要打開 放行。若 macOS 直接拒絕，改為清掉下載標記：
+  `xattr -dr com.apple.quarantine /Applications/fluxsmith.app`。
 - **Windows** —— 執行安裝檔，選「其他資訊 > 仍要執行」。它以目前使用者身分安裝，不會要求管理員權限。
 
 執行之前先用同一個 release 裡的 `SHA256SUMS` 核對下載：

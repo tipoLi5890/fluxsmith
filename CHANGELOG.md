@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-13
+
+- The macOS bundles are ad-hoc signed, so a downloaded copy opens. 0.1.0's `.app`
+  was never signed as a bundle: the Rust linker had ad-hoc signed the inner binary,
+  leaving a signature that claimed sealed resources the bundle did not have, and
+  `codesign --verify` rejected it with "code has no resources but signature
+  indicates they must be present". macOS reports that as **"fluxsmith is damaged
+  and can't be opened"** and offers no way past it -- not the "unidentified
+  developer" prompt the notes described, which only appears for a *valid* but
+  unnotarized signature. Building with an ad-hoc identity binds `Info.plist` and
+  seals the resources; Gatekeeper then rejects the app in the ordinary way, which
+  System Settings can override. The installers are still unsigned in the sense
+  that matters -- no Developer ID, no notarization -- and the release notes now
+  also give `xattr -dr com.apple.quarantine` for when the override is not offered.
+
 ## [0.1.0] - 2026-09-12
 
 - A turn that under-declared its own scope no longer stops to ask (harness). The scope of a turn always has an upper bound the model did not author — the approved plan step, or the ceiling Rust freezes. What the model then declares inside that bound is its own bookkeeping, so a refusal the ceiling would not have raised is not a decision for the engineer: the model is told which ops its `turn.begin` is missing and re-declares (`TURN_ENVELOPE_TOO_NARROW`), or, under Auto, the turn envelope is widened to the ceiling for exactly that op and the call proceeds. Anything genuinely outside the ceiling still raises the same approval card. The 2026-09-06 golden run raised two such cards: `ldo_3v3` asked for `route_net` on a ceiling that allows every op, and `power_subsheet` asked to create the very sheet file the user's message had named.

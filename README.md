@@ -76,7 +76,8 @@ They are unsigned, so the first launch is blocked. That is expected, and fluxsmi
 work around it on your behalf:
 
 - **macOS** — open the `.dmg`, drag fluxsmith to Applications, launch it once, then allow it under
-  System Settings > Privacy & Security > Open Anyway.
+  System Settings > Privacy & Security > Open Anyway. If macOS refuses outright, clear the download
+  flag instead: `xattr -dr com.apple.quarantine /Applications/fluxsmith.app`.
 - **Windows** — run the installer and choose More info > Run anyway. It installs for the current
   user, so there is no administrator prompt.
 
