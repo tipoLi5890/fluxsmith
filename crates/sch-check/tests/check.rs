@@ -1,6 +1,41 @@
 // SPDX-License-Identifier: Apache-2.0
 use std::path::Path;
 
+/// These cases place parts by `lib_id` from KiCad's own symbol libraries, which this
+/// repository deliberately does not vendor (`release-process.md`: fluxsmith does not
+/// redistribute the libraries), so `engine()` hands the write gate an empty library and
+/// every apply is refused with `SYMBOL_NOT_FOUND`. Hosted CI has no KiCad, so they skip
+/// there; the conformance runner sets `FLUXSMITH_CONFORMANCE=required`, which turns
+/// absence into a hard failure so a skip cannot pass silently where KiCad does exist.
+fn kicad_libraries_present() -> bool {
+    let (env, table) = sch_read::discover_kicad(None);
+    let resolvable = table
+        .and_then(|t| sch_read::parse_lib_table(&t, &env, 0).ok())
+        .map(|rows| !rows.is_empty())
+        .unwrap_or(false);
+    if resolvable {
+        return true;
+    }
+    let required = std::env::var("FLUXSMITH_CONFORMANCE")
+        .map(|v| v == "required")
+        .unwrap_or(false);
+    assert!(
+        !required,
+        "FLUXSMITH_CONFORMANCE=required but KiCad's symbol libraries were not found \
+         (install KiCad 10 so sym-lib-table resolves)"
+    );
+    false
+}
+
+macro_rules! need_kicad_libs {
+    () => {
+        if !kicad_libraries_present() {
+            eprintln!("KiCad symbol libraries not installed: case skipped");
+            return;
+        }
+    };
+}
+
 fn fixture() -> sch_read::SheetTree {
     let p = Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../tests/conformance/fixtures/hier/hier_root.kicad_sch");
@@ -99,6 +134,7 @@ fn req(target: &std::path::Path, json: &str) -> sch_write::DrawRequest {
 
 #[test]
 fn undriven_power_input_names_its_anchor_and_a_pwr_flag_clears_it() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let fx = std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR"))
         .join("../../tests/conformance/fixtures/hier");

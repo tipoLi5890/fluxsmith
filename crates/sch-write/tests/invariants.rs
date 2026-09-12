@@ -9,6 +9,41 @@ use serde_json::json;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+/// These cases place parts by `lib_id` from KiCad's own symbol libraries, which this
+/// repository deliberately does not vendor (`release-process.md`: fluxsmith does not
+/// redistribute the libraries), so `engine()` hands the write gate an empty library and
+/// every apply is refused with `SYMBOL_NOT_FOUND`. Hosted CI has no KiCad, so they skip
+/// there; the conformance runner sets `FLUXSMITH_CONFORMANCE=required`, which turns
+/// absence into a hard failure so a skip cannot pass silently where KiCad does exist.
+fn kicad_libraries_present() -> bool {
+    let (env, table) = sch_read::discover_kicad(None);
+    let resolvable = table
+        .and_then(|t| sch_read::parse_lib_table(&t, &env, 0).ok())
+        .map(|rows| !rows.is_empty())
+        .unwrap_or(false);
+    if resolvable {
+        return true;
+    }
+    let required = std::env::var("FLUXSMITH_CONFORMANCE")
+        .map(|v| v == "required")
+        .unwrap_or(false);
+    assert!(
+        !required,
+        "FLUXSMITH_CONFORMANCE=required but KiCad's symbol libraries were not found \
+         (install KiCad 10 so sym-lib-table resolves)"
+    );
+    false
+}
+
+macro_rules! need_kicad_libs {
+    () => {
+        if !kicad_libraries_present() {
+            eprintln!("KiCad symbol libraries not installed: case skipped");
+            return;
+        }
+    };
+}
+
 fn fixtures() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/conformance/fixtures")
 }
@@ -873,6 +908,7 @@ fn reg_duplicate_pin_numbers_get_distinct_uuids() {
 /// does not re-identify untouched symbols, wires, labels or junctions.
 #[test]
 fn reg_identity_independent_of_op_order_and_insertion() {
+    need_kicad_libs!();
     let da = tempfile::tempdir().unwrap();
     let db = tempfile::tempdir().unwrap();
     let ta = copy_hier(da.path());
@@ -980,6 +1016,7 @@ fn reg_power_port_for_another_rail_on_same_anchor_is_not_silent() {
 /// instead, which treated the port as an ordinary part.
 #[test]
 fn inv_power_symbol_references_are_hidden() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1038,6 +1075,7 @@ fn inv_power_symbol_references_are_hidden() {
 /// stood across the connector's pin row with its net name drawn down it.
 #[test]
 fn reg_power_symbol_placed_as_a_component_faces_its_pin() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1179,6 +1217,7 @@ fn reg_kicad_cli_no_double_dash_separator() {}
 /// empty sheet, loads in `kicad-cli sch erc` without annotation / library errors.
 #[test]
 fn erc_oracle_on_fixtures_and_golden_references() {
+    need_kicad_libs!();
     if require_oracle().is_none() {
         return;
     }

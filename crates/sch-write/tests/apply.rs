@@ -5,6 +5,41 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+/// These cases place parts by `lib_id` from KiCad's own symbol libraries, which this
+/// repository deliberately does not vendor (`release-process.md`: fluxsmith does not
+/// redistribute the libraries), so `engine()` hands the write gate an empty library and
+/// every apply is refused with `SYMBOL_NOT_FOUND`. Hosted CI has no KiCad, so they skip
+/// there; the conformance runner sets `FLUXSMITH_CONFORMANCE=required`, which turns
+/// absence into a hard failure so a skip cannot pass silently where KiCad does exist.
+fn kicad_libraries_present() -> bool {
+    let (env, table) = sch_read::discover_kicad(None);
+    let resolvable = table
+        .and_then(|t| sch_read::parse_lib_table(&t, &env, 0).ok())
+        .map(|rows| !rows.is_empty())
+        .unwrap_or(false);
+    if resolvable {
+        return true;
+    }
+    let required = std::env::var("FLUXSMITH_CONFORMANCE")
+        .map(|v| v == "required")
+        .unwrap_or(false);
+    assert!(
+        !required,
+        "FLUXSMITH_CONFORMANCE=required but KiCad's symbol libraries were not found \
+         (install KiCad 10 so sym-lib-table resolves)"
+    );
+    false
+}
+
+macro_rules! need_kicad_libs {
+    () => {
+        if !kicad_libraries_present() {
+            eprintln!("KiCad symbol libraries not installed: case skipped");
+            return;
+        }
+    };
+}
+
 fn fixtures() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/conformance/fixtures")
 }
@@ -117,6 +152,7 @@ const OPS: &str = r#"{"protocol_version":1,"groups":{"blk":{"origin_mil":[4000,4
 
 #[test]
 fn plan_apply_roundtrip_oracle_and_idempotent() {
+    need_kicad_libs!();
     let dir_a = tempfile::tempdir().unwrap();
     let dir_b = tempfile::tempdir().unwrap();
     let ta = copy_hier(dir_a.path());
@@ -388,6 +424,7 @@ fn rename_net_refuses_an_ambiguous_scope() {
 /// `rename_net_scope_is_the_labels_own_scope`.)
 #[test]
 fn rename_net_local_label_on_two_sheets_needs_a_sheet() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let child = dir.path().join("hier_child.kicad_sch");
@@ -517,6 +554,7 @@ fn debug_dump_to_env_dir() {
 
 #[test]
 fn placement_nudges_and_layout_gate() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -611,6 +649,7 @@ fn symbol_at(sch: &Path, designator: &str) -> sch_model::Pt {
 /// off-grid silently.
 #[test]
 fn no_nudge_snaps_without_moving_and_exact_reports_off_grid() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -931,6 +970,7 @@ fn power_ports_orient_from_the_pin_and_stub_sideways() {
 /// runs under R71's lower pin; the GND port on that pin clears it with one 100 mil step.
 #[test]
 fn port_stub_clears_a_neighbours_property_text() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -987,6 +1027,7 @@ fn port_stub_clears_a_neighbours_property_text() {
 /// part's texts beside it, clear of its own pin lines.
 #[test]
 fn port_stub_extension_is_bounded_and_says_so() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1038,6 +1079,7 @@ fn port_stub_extension_is_bounded_and_says_so() {
 
 #[test]
 fn keyed_frames_are_idempotent_and_rows_align() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1183,6 +1225,7 @@ fn wires_snap_to_grid_and_off_grid_is_reported() {
 /// the side on a short wire and stays electrically on the same net.
 #[test]
 fn reg_pwr_flag_on_occupied_pin_moves_aside() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1219,6 +1262,7 @@ fn reg_pwr_flag_on_occupied_pin_moves_aside() {
 /// (that merged VBUS with D+ in the 2026-08-30 golden run: strict_nets refusal, no flag placed).
 #[test]
 fn reg_pwr_flag_beside_header_pin_does_not_touch_neighbour() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1366,6 +1410,7 @@ fn reg_unknown_op_field_is_reported_in_per_op() {
 /// the UI has for "Added: R10 4k7" / "Changed: R1 Value 1k -> 1k5", so it is asserted here.
 #[test]
 fn created_and_changed_name_what_the_oplist_drew() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1490,6 +1535,7 @@ fn empty_match_is_object_not_found_with_candidates() {
 /// boxes. It now runs the same clearance search as the stub, so no two drawn texts overlap.
 #[test]
 fn reg_pwr_flag_text_clears_rail_port() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1554,6 +1600,7 @@ fn reg_pwr_flag_text_clears_rail_port() {
 /// up (rail), so the port stands vertical the way a drafter draws it.
 #[test]
 fn reg_side_pin_gnd_drops_below() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1717,6 +1764,7 @@ fn reg_sheet_pin_distribution() {
 /// `DECAP_FAR` check is the other half: silent for the anchored cap, and it speaks for a far one.
 #[test]
 fn reg_place_decoupling_near_pin() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1793,6 +1841,7 @@ fn reg_place_decoupling_near_pin() {
 /// as an L instead, and the netlist is unchanged by the redraw.
 #[test]
 fn reg_move_component_keeps_wires_orthogonal() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -1963,6 +2012,7 @@ fn reg_flag_aside_without_a_glyph_still_avoids_connection_points() {
 /// no other.
 #[test]
 fn reg_route_avoids_foreign_pin_tips() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
@@ -2089,6 +2139,7 @@ fn a_wire_onto_a_no_connect_warns() {
 /// any other port), the rename is reported, and the delivery check then leaves it alone.
 #[test]
 fn reg_power_symbol_placed_as_a_part_is_annotated_as_a_port() {
+    need_kicad_libs!();
     let dir = tempfile::tempdir().unwrap();
     let t = copy_hier(dir.path());
     let mut eng = engine();
